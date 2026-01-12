@@ -1,3 +1,4 @@
+import { memoize } from "@/utils/singleton";
 import * as Yup from "yup";
 
 // ========================================
@@ -68,8 +69,8 @@ export const getUpdateProfileSchema = memoize(() =>
 // ========================================
 // Types
 // ========================================
-export type LoginFormData = Yup.InferType<typeof loginSchema>;
-export type ForgotPasswordFormData = Yup.InferType<typeof forgotPasswordSchema>;
-export type ResetPasswordFormData = Yup.InferType<typeof resetPasswordSchema>;
+export type LoginFormData = Yup.InferType<ReturnType<typeof getLoginSchema>>;
+export type ForgotPasswordFormData = Yup.InferType<ReturnType<typeof getForgotPasswordSchema>>;
+export type ResetPasswordFormData = Yup.InferType<ReturnType<typeof getResetPasswordSchema>>;
 export type UpdatePasswordFormData = Yup.InferType<ReturnType<typeof getUpdatePasswordSchema>>;
 export type UpdateProfileFormData = Yup.InferType<ReturnType<typeof getUpdateProfileSchema>>;

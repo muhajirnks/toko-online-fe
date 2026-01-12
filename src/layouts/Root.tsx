@@ -13,7 +13,7 @@ import SilentAuthMiddleware from "@/middleware/SilentAuthMiddleware.tsx";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { useEffect } from "react";
-import useThemeStore from "@/store/useThemeStore";
+import { useThemeStore } from "@/store/useThemeStore";
 
 const Root = () => {
    const { snackbar, setSnackbar } = useSnackbarStore();

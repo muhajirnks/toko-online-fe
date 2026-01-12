@@ -1,4 +1,4 @@
-import useUserStore from "@/store/useUserStore";
+import { useUserStore } from "@/store/useUserStore";
 import { Fragment } from "react";
 import Loading from "@/components/Loading";
 import { Navigate, Outlet } from "react-router-dom";

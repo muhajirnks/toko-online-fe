@@ -24,11 +24,11 @@ export interface Pagination<T> {
 }
 
 export interface PaginationQs {
-   search: string;
-   page: number;
-   limit: number;
-   sort: string;
-   direction: DirectionQs;
+   search?: string;
+   page?: number;
+   limit?: number;
+   sort?: string;
+   direction?: DirectionQs;
 }
 
 export type DirectionQs = "asc" | "desc";

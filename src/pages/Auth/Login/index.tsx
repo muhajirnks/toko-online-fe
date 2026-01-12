@@ -1,8 +1,7 @@
 import Input from "@/components/form/Input";
 import AuthLayout from "@/layouts/AuthLayout";
-import { ACC_TOKEN_KEY, REF_TOKEN_KEY } from "@/lib/fetch/myFetch";
 import { login } from "@/services/auth.service";
-import useUserStore from "@/store/useUserStore";
+import { useUserStore } from "@/store/useUserStore";
 import type { FieldAttributes, HandleSubmit } from "@/types/formik.type";
 import { getLoginSchema, type LoginFormData } from "@/validations/authSchema";
 import {
@@ -18,7 +17,7 @@ import { MdLock, MdPerson } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 
 const formData: LoginFormData = {
-   name: "",
+   email: "",
    password: "",
 };
 
@@ -40,8 +39,6 @@ const Login = () => {
 
       if (data) {
          setUser(data.data);
-         localStorage.setItem(ACC_TOKEN_KEY, data.token.accessToken);
-         localStorage.setItem(REF_TOKEN_KEY, data.token.refreshToken);
          navigate("/");
       }
 
@@ -76,22 +73,22 @@ const Login = () => {
                <Form>
                   <div className="grid gap-5">
                      <div className="grid gap-[13px]">
-                        <FormLabel htmlFor="name">Username</FormLabel>
+                        <FormLabel htmlFor="email">Username</FormLabel>
 
-                        <Field name="name">
+                        <Field name="email">
                            {({
                               field,
                               meta,
                            }: FieldAttributes<LoginFormData>) => (
                               <Input
                                  {...field}
-                                 id="name"
+                                 id="email"
                                  type="text"
                                  required
                                  autoFocus
                                  tabIndex={1}
-                                 autoComplete="name"
-                                 placeholder="Enter your username"
+                                 autoComplete="email"
+                                 placeholder="Enter your email"
                                  slotProps={{
                                     input: {
                                        startAdornment: (

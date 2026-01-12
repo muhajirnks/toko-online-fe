@@ -1,20 +1,31 @@
 export interface User {
-    id: number;
-    avatarUrl: string;
+    _id: number;
     name: string;
     email: string;
-    phone: string | null;
+    role: "admin" | "seller" | "buyer";
 }
 export interface Token {
-    type: 'bearer';
+    type: 'Bearer';
     accessToken: string;
     refreshToken: string;
+}
+
+export interface RegisterRequest {
+    name: string;
+    email: string;
+    password: string;
 }
 
 export interface LoginRequest {
     email: string;
     password: string;
     fcmToken: string;
+}
+
+export interface LoginResponse {
+    message: string;
+    token: Token
+    data: User
 }
 
 export interface ForgotPasswordRequest {
@@ -28,7 +39,6 @@ export interface ResetPasswordRequest {
 }
 
 export interface UpdateProfileRequest {
-    avatar?: File
     name: string
     email: string
 }
@@ -36,10 +46,4 @@ export interface UpdateProfileRequest {
 export interface UpdatePasswordRequest {
     oldPassword: string
     newPassword: string
-}
-
-export interface LoginResponse {
-    message: string;
-    token: Token
-    data: User
 }

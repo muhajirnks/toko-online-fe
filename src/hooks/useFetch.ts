@@ -16,7 +16,7 @@ interface Result<T> {
 export type FetchData<T> = () => Promise<FetchResult<T>>;
 type UseFetchOptions = Options & { immediate?: boolean, showToast?: boolean }
 
-const useFetch = <T>(url: string, opts: UseFetchOptions) => {
+const useFetch = <T>(url: string, opts: UseFetchOptions = {}) => {
    const { immediate = true, showToast = true } = opts;
 
    const [result, setResult] = useState<Result<T>>({

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { onMessage } from "firebase/messaging";
 import { getMessaging } from "@/lib/firebase/firebase";
-import useNotificationStore from "../store/useNotificationStore";
+import { useNotificationStore } from "../store/useNotificationStore";
 // import { getCountUnreadNotif } from "@/services/notif.service";
 
 export const useNotificationListener = () => {

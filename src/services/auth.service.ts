@@ -1,7 +1,21 @@
 import myFetch from "@/lib/fetch/myFetch";
 import type { MessageResponse } from "@/types/api/api.type";
-import type { ForgotPasswordRequest, LoginRequest, LoginResponse, ResetPasswordRequest, UpdatePasswordRequest, UpdateProfileRequest } from "@/types/api/auth.type";
-import { prepareFormData } from "@/utils/prepareFormData";
+import type {
+   ForgotPasswordRequest,
+   LoginRequest,
+   LoginResponse,
+   RegisterRequest,
+   ResetPasswordRequest,
+   UpdatePasswordRequest,
+   UpdateProfileRequest,
+} from "@/types/api/auth.type";
+
+export const register = (body: RegisterRequest) => {
+   return myFetch<MessageResponse>("/api/v1/auth/register", {
+      method: "POST",
+      body,
+   });
+};
 
 export const getProfile = () => {
    return myFetch<LoginResponse>("/api/v1/auth/profile");
@@ -40,10 +54,9 @@ export const resetPassword = (body: ResetPasswordRequest) => {
 };
 
 export const updateProfile = (body: UpdateProfileRequest) => {
-   const formData = prepareFormData(body)
    return myFetch<MessageResponse>("/api/v1/auth/profile", {
       method: "PUT",
-      body: formData,
+      body,
    });
 };
 

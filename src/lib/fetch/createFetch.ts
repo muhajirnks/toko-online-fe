@@ -19,6 +19,8 @@ interface CreateOptions {
    refreshTokenKey?: string;
    defaultHeaders?: Record<string, string>;
    handleRefresh?: HandleRefresh;
+   camelize?: boolean;
+   decamelize?: boolean;
 }
 
 export interface FetchResult<T> {
@@ -40,6 +42,8 @@ const createFetch = (opts: CreateOptions = {}) => {
       tokenKey,
       defaultHeaders = {},
       handleRefresh,
+      camelize: _camelize = true,
+      decamelize: _decamelize = true,
    } = opts;
 
    // Handle refresh token with queue
@@ -85,8 +89,8 @@ const createFetch = (opts: CreateOptions = {}) => {
          method = "GET",
          qs = {},
          body,
-         camelize = true,
-         decamelize = true,
+         camelize = _camelize ?? true,
+         decamelize = _decamelize ?? true,
          mode,
          skipRetry = false,
          cache = "default",

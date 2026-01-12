@@ -10,7 +10,7 @@ interface UseNotificationStore {
    setLatestMessage: (data: MessagePayload | null) => void;
 }
 
-const useNotificationStore = create<UseNotificationStore>((set) => ({
+export const useNotificationStore = create<UseNotificationStore>((set) => ({
    countUnread: 0,
    setCountUnread: (data) => set({ countUnread: data }),
    incCountUnread: () =>
@@ -24,5 +24,3 @@ const useNotificationStore = create<UseNotificationStore>((set) => ({
    latestMessage: null,
    setLatestMessage: (data) => set({ latestMessage: data }),
 }));
-
-export default useNotificationStore;

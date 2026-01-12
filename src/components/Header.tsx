@@ -1,4 +1,4 @@
-import useUserStore from "@/store/useUserStore";
+import { useUserStore } from "@/store/useUserStore";
 import {
    Avatar,
    Box,
@@ -13,20 +13,16 @@ import {
    Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { MdChevronRight, MdLogout, MdPerson, MdSettings } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { MdChevronRight, MdLogout, MdSettings, MdShoppingCart, MdListAlt, MdStorefront } from "react-icons/md";
+import { useNavigate, Link } from "react-router-dom";
 import { LuPanelLeft } from "react-icons/lu";
-import { getFullUrl } from "@/utils/fileUtils";
-import HeaderSearch from "./HeaderSearch";
-import useThemeStore from "@/store/useThemeStore";
+import { useThemeStore } from "@/store/useThemeStore";
 import { logout } from "@/services/auth.service";
-
-const menuItems = [
-   { path: "/settings/profile", label: "Settings", icon: <MdSettings /> },
-];
+import { useCartStore } from "@/store/useCartStore";
+import { Badge } from "@mui/material";
 
 interface Props {
-   toggleSidebar: () => void;
+   toggleSidebar?: () => void;
 }
 
 const Header: React.FC<Props> = ({ toggleSidebar }) => {
@@ -35,6 +31,7 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
    );
 
    const { user, setUser, loading, setLoading } = useUserStore();
+   const totalItems = useCartStore(s => s.getTotalItems());
    const navigate = useNavigate();
    const themeMode = useThemeStore(s => s.theme)
 
@@ -54,6 +51,14 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
       setLoading(false);
    };
 
+   const avatarMenuItems = [
+      { path: "/orders", label: "My Orders", icon: <MdListAlt /> },
+      { path: "/settings/profile", label: "Settings", icon: <MdSettings /> },
+      ...(user?.role === "seller" || user?.role === "admin" 
+         ? [{ path: "/seller/products", label: "Seller Panel", icon: <MdStorefront /> }] 
+         : []),
+   ];
+
    return (
       <Box
          component="header"
@@ -64,79 +69,90 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
          }}
       >
          <Box className="flex gap-3 items-center">
-            <IconButton onClick={toggleSidebar}>
-               <LuPanelLeft className="text-base" />
-            </IconButton>
-
-            <HeaderSearch />
+            {toggleSidebar ? (
+               <IconButton onClick={toggleSidebar}>
+                  <LuPanelLeft className="text-base" />
+               </IconButton>
+            ) : (
+               <Typography
+                  variant="h6"
+                  component={Link}
+                  to="/"
+                  className="font-bold text-primary no-underline mr-4"
+               >
+                  TokoOnline
+               </Typography>
+            )}
          </Box>
 
          <Box className="flex gap-[15px] items-center">
-            {/* <Tooltip title='Notifications'>
-               <Notif />
-            </Tooltip> */}
+            <IconButton component={Link} to="/cart" color="inherit">
+               <Badge badgeContent={totalItems} color="primary">
+                  <MdShoppingCart />
+               </Badge>
+            </IconButton>
 
-            <Button
-               color="inherit"
-               onClick={(e) => setAvatarMenuAnchor(e.currentTarget)}
-               className="flex gap-2 items-center"
-            >
-               <Avatar
-                  alt="User Avatar"
-                  src={user ? getFullUrl(user.avatarUrl) : ""}
-                  sx={{
-                     width: "35px",
-                     height: "35px",
-                     cursor: "pointer",
-                     "&:hover": {
-                        opacity: 0.8,
-                        transition: "opacity 0.2s ease-in-out",
-                     },
-                  }}
+            {user ? (
+               <Button
+                  color="inherit"
+                  onClick={(e) => setAvatarMenuAnchor(e.currentTarget)}
+                  className="flex gap-2 items-center"
                >
-                  {!user?.avatarUrl && (
-                     <MdPerson size="35px" className="text-[#515151]/20" />
-                  )}
-               </Avatar>
-               <Box>
-                  <Typography
-                     variant="body1"
-                     className="text-start text-text-primary"
-                  >
-                     {user?.name}
-                  </Typography>
-                  <Typography
-                     variant="body2"
-                     className="text-start text-text-secondary"
-                  >
-                     {user?.email}
-                  </Typography>
-               </Box>
-               <MdChevronRight
-                  className={`${
-                     avatarMenuAnchor ? "rotate-270" : "rotate-90"
-                  } transition-transform text-text-secondary`}
-               />
-            </Button>
+                  <Avatar
+                     alt={user.name || "User Avatar"}
+                     sx={{
+                        width: "35px",
+                        height: "35px",
+                        cursor: "pointer",
+                        "&:hover": {
+                           opacity: 0.8,
+                           transition: "opacity 0.2s ease-in-out",
+                        },
+                     }}
+                  />
+                  <Box className="flex flex-col items-start text-left normal-case">
+                     <Typography variant="body2" className="font-semibold line-clamp-1">
+                        {user.name}
+                     </Typography>
+                     <Typography variant="caption" color="text.secondary">
+                        {user.role}
+                     </Typography>
+                  </Box>
+                  <MdChevronRight
+                     className={`${
+                        avatarMenuAnchor ? "rotate-270" : "rotate-90"
+                     } transition-transform text-text-secondary ml-1`}
+                  />
+               </Button>
+            ) : (
+               <Button
+                  component={Link}
+                  to="/login"
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className="rounded-full px-6"
+               >
+                  Login
+               </Button>
+            )}
          </Box>
 
          {/* Avatar Dropdown Menu */}
          <Menu
             anchorEl={avatarMenuAnchor}
             open={Boolean(avatarMenuAnchor)}
-            onClose={() => handleClose()}
+            onClose={handleClose}
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-            slotProps={{
-               paper: {
-                  sx: {
-                     background: "var(--color-background-paper)",
-                     mt: 1,
-                     borderRadius: "10px",
-                     minWidth: "240px",
-                     boxShadow: "0 10px 40px rgba(0, 0, 0, 0.15)",
-                     border: "1px solid rgba(0, 0, 0, 0.1)",
-                  },
+            sx={{
+               "& .MuiPaper-root": {
+                  background: "var(--color-background-paper)",
+                  mt: 1,
+                  borderRadius: "10px",
+                  minWidth: "220px",
+                  boxShadow: "0 10px 40px rgba(0, 0, 0, 0.15)",
+                  border: "1px solid rgba(0, 0, 0, 0.1)",
                },
             }}
          >
@@ -153,30 +169,24 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
             <Divider orientation="horizontal" />
 
             {/* Navigation Menu Items */}
-            {menuItems.map((item) => {
-               return (
-                  <MenuItem
-                     key={item.path}
-                     onClick={() => {
-                        navigate(item.path);
-                        handleClose();
-                     }}
-                     className={`px-5 py-3`}
-                  >
-                     <ListItemIcon className="text-text-secondary text-xl">
-                        {item.icon}
-                     </ListItemIcon>
-                     <ListItemText
-                        primary={item.label}
-                        slotProps={{
-                           primary: {
-                              className: "text-text-secondary",
-                           },
-                        }}
-                     />
-                  </MenuItem>
-               );
-            })}
+            {avatarMenuItems.map((item) => (
+               <MenuItem
+                  key={item.path}
+                  onClick={() => {
+                     navigate(item.path);
+                     handleClose();
+                  }}
+                  className="py-3 px-5 hover:bg-background-paper-light transition-colors"
+               >
+                  <ListItemIcon className="text-xl text-text-secondary min-w-[35px]">
+                     {item.icon}
+                  </ListItemIcon>
+                  <ListItemText 
+                     primary={item.label} 
+                     primaryTypographyProps={{ variant: 'body2', className: 'font-medium' }}
+                  />
+               </MenuItem>
+            ))}
 
             {/* Logout */}
             <MenuItem

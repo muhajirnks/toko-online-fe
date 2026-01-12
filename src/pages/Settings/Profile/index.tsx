@@ -1,10 +1,8 @@
-import AvatarInput from "@/components/form/AvatarInput";
 import useSnackbar from "@/hooks/useSnackbar";
 import { getProfile, updateProfile } from "@/services/auth.service";
-import useUserStore from "@/store/useUserStore";
+import{ useUserStore} from "@/store/useUserStore";
 import type { UpdateProfileRequest } from "@/types/api/auth.type";
 import type { FieldAttributes, HandleSubmit } from "@/types/formik.type";
-import { getFullUrl } from "@/utils/fileUtils";
 import { getUpdateProfileSchema, type UpdateProfileFormData } from "@/validations/authSchema";
 import {
    Alert,
@@ -35,10 +33,6 @@ const Profile = () => {
       const body: UpdateProfileRequest = {
          email: values.email,
          name: values.name,
-      }
-
-      if(values.avatar && typeof values.avatar !== "string") {
-         body.avatar = values.avatar
       }
 
       const { data, error } = await updateProfile(body);
@@ -159,36 +153,6 @@ const Profile = () => {
                                     error={meta.touched && Boolean(meta.error)}
                                     helperText={meta.touched && meta.error}
                                  />
-                              )}
-                           </Field>
-                        </Box>
-                     </Box>
-                     <Divider flexItem orientation="horizontal" />
-                     <Box className="grid grid-cols-3 w-full">
-                        <Box className="col-span-1">
-                           <FormLabel>Avatar</FormLabel>
-                        </Box>
-                        <Box className="col-span-2">
-                           <Field name="avatar">
-                              {({
-                                 form,
-                                 field,
-                                 meta,
-                              }: FieldAttributes<UpdateProfileFormData>) => (
-                                 <Box>
-                                    <AvatarInput
-                                       value={field.value || (user?.avatarUrl ? getFullUrl(user.avatarUrl) : null)}
-                                       accept={"image/*"}
-                                       onChange={(file) =>
-                                          form.setFieldValue("avatar", file)
-                                       }
-                                       placeholder="Max file size: 2MB"
-                                       error={
-                                          meta.touched && Boolean(meta.error)
-                                       }
-                                       helperText={meta.touched && meta.error}
-                                    />
-                                 </Box>
                               )}
                            </Field>
                         </Box>

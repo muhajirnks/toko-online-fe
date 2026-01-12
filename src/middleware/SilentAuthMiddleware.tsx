@@ -1,4 +1,4 @@
-import useUserStore from "@/store/useUserStore";
+import { useUserStore } from "@/store/useUserStore";
 import { getProfile } from "@/services/auth.service";
 import { useEffect } from "react";
 

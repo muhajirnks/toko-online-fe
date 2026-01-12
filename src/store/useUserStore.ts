@@ -8,11 +8,10 @@ interface UseUserStore {
    setLoading: (loading: boolean) => void
 }
 
-const useUserStore = create<UseUserStore>((set) => ({
+export const useUserStore = create<UseUserStore>((set) => ({
    user: null,
    setUser: (data) => set({ user: data }),
    loading: false,
    setLoading: (loading: boolean) => set({ loading, }),
 }));
 
-export default useUserStore;
