@@ -18,6 +18,7 @@ import {
 import { useCartStore } from "@/store/useCartStore";
 import { useState } from "react";
 import { MdAddShoppingCart, MdStorefront, MdInventory, MdInfoOutline } from "react-icons/md";
+import { formatRupiah } from "@/utils/numberUtils";
 
 const ProductDetail = () => {
    const { id } = useParams();
@@ -80,7 +81,7 @@ const ProductDetail = () => {
             <Grid size={{xs: 12, md: 6}}>
                <Box>
                   <Chip 
-                     label={product.category?.name || "Kategori"} 
+                     label={product.category.name || "Kategori"} 
                      color="primary" 
                      variant="outlined" 
                      size="small" 
@@ -92,7 +93,7 @@ const ProductDetail = () => {
                   
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                      <Typography variant="h4" color="primary" fontWeight="bold">
-                        Rp {product.price.toLocaleString('id-ID')}
+                        {formatRupiah(product.price)}
                      </Typography>
                      {product.stock > 0 ? (
                         <Chip label="Stok Tersedia" color="success" size="small" variant="filled" />

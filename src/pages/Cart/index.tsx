@@ -1,10 +1,11 @@
 import { Container, Typography, Box, Grid, Card, CardContent, IconButton, Button, Divider, List, ListItem, ListItemText, ListItemAvatar, Avatar } from "@mui/material";
 import { useCartStore } from "@/store/useCartStore";
-import { FaTrash, FaPlus, FaMinus } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
 import { createOrder } from "@/services/order.service";
 import { useSnackbarStore } from "@/store/useSnackbarStore";
 import { useState } from "react";
+import { formatRupiah } from "@/utils/numberUtils";
 
 const CartPage = () => {
    const { items, removeItem, updateQuantity, getTotalPrice, clearCart } = useCartStore();
@@ -61,7 +62,7 @@ const CartPage = () => {
                            alignItems="flex-start"
                            secondaryAction={
                               <IconButton edge="end" aria-label="delete" onClick={() => removeItem(item.product._id)}>
-                                 <FaTrash color="error" />
+                                 <FaTrash color="error" className="text-lg" />
                               </IconButton>
                            }
                         >
@@ -81,7 +82,7 @@ const CartPage = () => {
                               secondary={
                                  <Box sx={{ mt: 1 }}>
                                     <Typography variant="body2" color="text.primary">
-                                       ${item.product.price.toLocaleString()}
+                                       {formatRupiah(item.product.price)}
                                     </Typography>
                                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, gap: 1 }}>
                                        <IconButton size="small" onClick={() => updateQuantity(item.product._id, item.quantity - 1)}>
@@ -112,7 +113,7 @@ const CartPage = () => {
                      <Divider sx={{ my: 2 }} />
                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
                         <Typography variant="h6">Total Price</Typography>
-                        <Typography variant="h6" color="primary">${getTotalPrice().toLocaleString()}</Typography>
+                        <Typography variant="h6" color="primary">{formatRupiah(getTotalPrice())}</Typography>
                      </Box>
                      <Button
                         fullWidth

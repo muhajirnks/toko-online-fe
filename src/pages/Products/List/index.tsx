@@ -48,7 +48,7 @@ const ProductList = () => {
    }, [search, categoryId]);
 
    return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
          {/* Breadcrumbs */}
          <Breadcrumbs sx={{ mb: 3 }}>
             <MuiLink component={RouterLink} to="/" underline="hover" color="inherit">

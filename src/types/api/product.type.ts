@@ -1,5 +1,6 @@
 import type { PaginationQs } from "./api.type";
 import type { User } from "./auth.type";
+import type { Category } from "./category.type";
 
 export interface Product {
    _id: string;
@@ -7,13 +8,11 @@ export interface Product {
    description: string;
    price: number;
    stock: number;
-   imageUrl?: string;
-   category?: string;
-   sellerId: number;
+   imageUrl: string;
+   category: Category;
+   seller: User;
    createdAt: string;
    updatedAt: string;
-
-   seller: User;
 }
 
 export interface ListProductRequest extends PaginationQs {
@@ -26,8 +25,15 @@ export interface CreateProductRequest {
    description: string;
    price: number;
    stock: number;
-   category: string;
-   image?: File | null;
+   categoryId: string;
+   image: File;
 }
 
-export interface UpdateProductRequest extends CreateProductRequest {}
+export interface UpdateProductRequest {
+   name: string;
+   description: string;
+   price: number;
+   stock: number;
+   categoryId: string;
+   image?: File | null;
+}

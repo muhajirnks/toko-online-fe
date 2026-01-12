@@ -1,6 +1,6 @@
 import DataTable, { createTableConfig } from "@/components/DataTable";
 import { useListProducts, createProduct, updateProduct, deleteProduct } from "@/services/product.service";
-import type { Product } from "@/types/api/product.type";
+import type { CreateProductRequest, Product } from "@/types/api/product.type";
 import { Container, Typography, Box, Button, Dialog, DialogTitle, DialogContent, IconButton } from "@mui/material";
 import { useState, useMemo } from "react";
 import PaginationComponent from "@/components/Pagination";
@@ -8,8 +8,9 @@ import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import ProductForm from "./components/ProductForm";
 import { useSnackbarStore } from "@/store/useSnackbarStore";
 import { useUserStore } from "@/store/useUserStore";
-import type { ProductFormData } from "@/validations/productSchema";
+import { formatRupiah } from "@/utils/numberUtils";
 import type { HandleSubmit } from "@/types/formik.type";
+import type { ProductFormData } from "@/validations/productSchema";
 
 const SellerProductsPage = () => {
    const [page, setPage] = useState(1);
@@ -42,7 +43,7 @@ const SellerProductsPage = () => {
       try {
          const { error } = selectedProduct
             ? await updateProduct(selectedProduct._id, values)
-            : await createProduct(values);
+            : await createProduct(values as CreateProductRequest);
 
          if (error) {
             setSnackbar({ type: "failure", message: error.message });
@@ -77,7 +78,7 @@ const SellerProductsPage = () => {
       uniqueField: "_id",
       columns: [
          { key: "name", label: "Product Name", type: "string" },
-         { key: "price", label: "Price", type: "custom", renderValue: (val) => `$${val.toLocaleString()}` },
+         { key: "price", label: "Price", type: "custom", renderValue: (val) => formatRupiah(val as number) },
          { key: "stock", label: "Stock", type: "number" },
          { key: "category", label: "Category", type: "string" },
          {

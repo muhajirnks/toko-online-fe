@@ -118,6 +118,7 @@ const Home = () => {
                               fontSize: "2.5rem",
                               mb: 2,
                            }}
+                           className="mx-auto w-fit"
                         >
                            {feature.icon}
                         </Box>
@@ -163,6 +164,8 @@ const Home = () => {
                            to={`/products?categoryId=${cat._id}`}
                            sx={{
                               p: 3,
+                              display: 'block',
+                              height: '100%',
                               textAlign: "center",
                               cursor: "pointer",
                               textDecoration: "none",

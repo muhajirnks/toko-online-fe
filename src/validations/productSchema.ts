@@ -16,7 +16,7 @@ export const getProductSchema = memoize(() =>
          .typeError("Stock must be a number")
          .min(0, "Stock must be positive")
          .required("Stock is required"),
-      category: Yup.string().required("Category is required"),
+      categoryId: Yup.string().required("Category is required"),
       image: Yup.mixed<File>().nullable(),
    })
 );

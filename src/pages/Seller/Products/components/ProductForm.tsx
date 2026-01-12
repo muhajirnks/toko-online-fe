@@ -29,7 +29,7 @@ const ProductForm = ({ initialValues, onSubmit, isSubmitting }: ProductFormProps
       description: initialValues?.description || "",
       price: initialValues?.price || 0,
       stock: initialValues?.stock || 0,
-      category: initialValues?.category || "",
+      categoryId: initialValues?.category?._id || "",
       image: null,
    };
 
@@ -121,12 +121,12 @@ const ProductForm = ({ initialValues, onSubmit, isSubmitting }: ProductFormProps
 
                   <Grid size={{xs: 12}}>
                      <div className="grid gap-[13px]">
-                        <FormLabel htmlFor="category">Category</FormLabel>
-                        <Field name="category">
+                        <FormLabel htmlFor="categoryId">Category</FormLabel>
+                        <Field name="categoryId">
                            {({ field, meta }: FieldAttributes<any>) => (
                               <SelectInput
                                  {...field}
-                                 id="category"
+                                 id="categoryId"
                                  fullWidth
                                  error={meta.touched && Boolean(meta.error)}
                               >
@@ -139,8 +139,8 @@ const ProductForm = ({ initialValues, onSubmit, isSubmitting }: ProductFormProps
                               </SelectInput>
                            )}
                         </Field>
-                        {touched.category && errors.category && (
-                           <div className="text-xs text-red-500 ml-3">{errors.category}</div>
+                        {touched.categoryId && errors.categoryId && (
+                           <div className="text-xs text-red-500 ml-3">{errors.categoryId}</div>
                         )}
                      </div>
                   </Grid>

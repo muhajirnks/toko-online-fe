@@ -4,6 +4,7 @@ import type { Order } from "@/types/api/order.type";
 import { Container, Typography, Box, Chip } from "@mui/material";
 import { useState, useMemo } from "react";
 import PaginationComponent from "@/components/Pagination";
+import { formatRupiah } from "@/utils/numberUtils";
 
 const OrdersPage = () => {
    const [page, setPage] = useState(1);
@@ -38,7 +39,7 @@ const OrdersPage = () => {
             key: "totalAmount",
             label: "Total",
             type: "custom",
-            renderValue: (value: number) => `$${value.toLocaleString()}`,
+            renderValue: (value: number) => formatRupiah(value),
          },
       ],
    });

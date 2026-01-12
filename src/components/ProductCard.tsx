@@ -4,6 +4,8 @@ import { useCartStore } from "@/store/useCartStore";
 import { Link } from "react-router-dom";
 import { MdAddShoppingCart, MdFavoriteBorder, MdVisibility } from "react-icons/md";
 
+import { formatRupiah } from "@/utils/numberUtils";
+
 interface ProductCardProps {
    product: Product;
 }
@@ -135,7 +137,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                   {product.description}
                </Typography>
                <Typography variant="h6" color="primary.main" fontWeight="bold">
-                  Rp {product.price.toLocaleString('id-ID')}
+                  {formatRupiah(product.price)}
                </Typography>
             </CardContent>
          </Link>
