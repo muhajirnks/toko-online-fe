@@ -1,5 +1,6 @@
 import { formatDate, formatDateTime, formatTime } from "@/utils/dateUtils";
 import { getFileName, getFullUrl } from "@/utils/fileUtils";
+import { formatCurrency, formatNumber } from "@/utils/stringUtils";
 import {
    Avatar,
    Box,
@@ -58,6 +59,7 @@ interface ColumnType {
       | "datetime"
       | "image"
       | "number"
+      | "currency"
       | "url"
       | "time"
       | "avatar";
@@ -345,6 +347,12 @@ const Cell = ({ row, col, loading, pl, pr }: CellProps) => {
                {label}
             </Avatar>
          );
+      } else if (col.type == 'number') {
+         value = formatNumber(rawValue);
+         label = value as string;
+      } else if (col.type == 'currency') {
+         value = formatCurrency(rawValue);
+         label = value as string;
       } else {
          value = label || "-";
       }

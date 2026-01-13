@@ -8,9 +8,9 @@ import { FaPlus, FaEdit, FaTrash } from "react-icons/fa";
 import ProductForm from "./components/ProductForm";
 import { useSnackbarStore } from "@/store/useSnackbarStore";
 import { useUserStore } from "@/store/useUserStore";
-import { formatRupiah } from "@/utils/numberUtils";
 import type { HandleSubmit } from "@/types/formik.type";
 import type { ProductFormData } from "@/validations/productSchema";
+import { formatCurrency } from "@/utils/stringUtils";
 
 const SellerProductsPage = () => {
    const [page, setPage] = useState(1);
@@ -78,7 +78,7 @@ const SellerProductsPage = () => {
       uniqueField: "_id",
       columns: [
          { key: "name", label: "Product Name", type: "string" },
-         { key: "price", label: "Price", type: "custom", renderValue: (val) => formatRupiah(val as number) },
+         { key: "price", label: "Price", type: "custom", renderValue: (val) => formatCurrency(val as number) },
          { key: "stock", label: "Stock", type: "number" },
          { key: "category", label: "Category", type: "string" },
          {

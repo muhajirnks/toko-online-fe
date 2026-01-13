@@ -3,140 +3,146 @@ import AuthMiddleware from "@/middleware/AuthMiddleware";
 import GuestMiddleware from "@/middleware/GuestMiddleware";
 import RoleMiddleware from "@/middleware/RoleMiddleware";
 import ErrorBoundary from "@/pages/Error/ErrorBoundary";
-import { createBrowserRouter } from "react-router-dom";
+import NotFound from "@/pages/Error/NotFound";
+import { createBrowserRouter, type RouteObject } from "react-router-dom";
 
-export const router = createBrowserRouter([
+const guestRoutes: RouteObject[] = [
    {
-      path: "/",
-      Component: Root,
-      errorElement: <ErrorBoundary />,
+      path: "/login",
+      lazy: async () => ({
+         Component: (await import("@/pages/Auth/Login")).default,
+      }),
+   },
+   {
+      path: "/forgot-password",
+      lazy: async () => ({
+         Component: (await import("@/pages/Auth/ForgotPassword")).default,
+      }),
+   },
+   {
+      path: "/reset-password",
+      lazy: async () => ({
+         Component: (await import("@/pages/Auth/ResetPassword")).default,
+      }),
+   },
+];
+
+const authRoutes: RouteObject[] = [
+   {
+      lazy: async () => ({
+         Component: (await import("@/layouts/MainLayout")).default,
+      }),
       children: [
          {
-            Component: GuestMiddleware,
+            element: <RoleMiddleware allowedRoles={["seller", "admin"]} />,
             children: [
                {
-                  path: "/login",
+                  path: "/seller/products",
                   lazy: async () => ({
-                     Component: (await import("@/pages/Auth/Login")).default,
-                  }),
-               },
-               {
-                  path: "/forgot-password",
-                  lazy: async () => ({
-                     Component: (await import("@/pages/Auth/ForgotPassword"))
+                     Component: (await import("@/pages/Seller/Products"))
                         .default,
                   }),
-               },
-               {
-                  path: "/reset-password",
-                  lazy: async () => ({
-                     Component: (await import("@/pages/Auth/ResetPassword"))
-                        .default,
-                  }),
-               },
-            ],
-         },
-         {
-            Component: AuthMiddleware,
-            children: [
-               {
-                  lazy: async () => ({
-                     Component: (await import("@/layouts/MainLayout")).default,
-                  }),
-                  children: [
-                     {
-                        element: <RoleMiddleware allowedRoles={["seller", "admin"]} />,
-                        children: [
-                           {
-                              path: "/seller/products",
-                              lazy: async () => ({
-                                 Component: (await import("@/pages/Seller/Products"))
-                                    .default,
-                              }),
-                           },
-                        ],
-                     },
-                     {
-                        lazy: async () => ({
-                           Component: (await import("@/layouts/SettingsLayout"))
-                              .default,
-                        }),
-                        children: [
-                           {
-                              path: "/settings/profile",
-                              lazy: async () => ({
-                                 Component: (
-                                    await import("@/pages/Settings/Profile")
-                                 ).default,
-                              }),
-                           },
-                           {
-                              path: "/settings/password",
-                              lazy: async () => ({
-                                 Component: (
-                                    await import("@/pages/Settings/Password")
-                                 ).default,
-                              }),
-                           },
-                           {
-                              path: "/settings/appearance",
-                              lazy: async () => ({
-                                 Component: (
-                                    await import("@/pages/Settings/Appearance")
-                                 ).default,
-                              }),
-                           },
-                        ],
-                     },
-                  ],
-               },
-               {
-                  lazy: async () => ({
-                     Component: (await import("@/layouts/BuyerLayout")).default,
-                  }),
-                  children: [
-                     {
-                        path: "/cart",
-                        lazy: async () => ({
-                           Component: (await import("@/pages/Cart")).default,
-                        }),
-                     },
-                     {
-                        path: "/orders",
-                        lazy: async () => ({
-                           Component: (await import("@/pages/Orders")).default,
-                        }),
-                     },
-                  ],
                },
             ],
          },
          {
             lazy: async () => ({
-               Component: (await import("@/layouts/BuyerLayout")).default,
+               Component: (await import("@/layouts/SettingsLayout")).default,
             }),
             children: [
                {
-                  index: true,
+                  path: "/settings/profile",
                   lazy: async () => ({
-                     Component: (await import("@/pages/Home")).default,
+                     Component: (await import("@/pages/Settings/Profile"))
+                        .default,
                   }),
                },
                {
-                  path: "/products",
+                  path: "/settings/password",
                   lazy: async () => ({
-                     Component: (await import("@/pages/Products/List")).default,
+                     Component: (await import("@/pages/Settings/Password"))
+                        .default,
                   }),
                },
                {
-                  path: "/products/:id",
+                  path: "/settings/appearance",
                   lazy: async () => ({
-                     Component: (await import("@/pages/Products/Detail"))
+                     Component: (await import("@/pages/Settings/Appearance"))
                         .default,
                   }),
                },
             ],
          },
+      ],
+   },
+   {
+      lazy: async () => ({
+         Component: (await import("@/layouts/BuyerLayout")).default,
+      }),
+      children: [
+         {
+            path: "/cart",
+            lazy: async () => ({
+               Component: (await import("@/pages/Cart")).default,
+            }),
+         },
+         {
+            path: "/orders",
+            lazy: async () => ({
+               Component: (await import("@/pages/Orders")).default,
+            }),
+         },
+      ],
+   },
+];
+
+const publicRoutes: RouteObject[] = [
+   {
+      lazy: async () => ({
+         Component: (await import("@/layouts/BuyerLayout")).default,
+      }),
+      children: [
+         {
+            index: true,
+            lazy: async () => ({
+               Component: (await import("@/pages/Home")).default,
+            }),
+         },
+         {
+            path: "/products",
+            lazy: async () => ({
+               Component: (await import("@/pages/Products/List")).default,
+            }),
+         },
+         {
+            path: "/products/:id",
+            lazy: async () => ({
+               Component: (await import("@/pages/Products/Detail")).default,
+            }),
+         },
+      ],
+   },
+];
+
+export const router = createBrowserRouter([
+   {
+      path: "/",
+      Component: Root,
+      ErrorBoundary: ErrorBoundary,
+      children: [
+         {
+            Component: GuestMiddleware,
+            children: guestRoutes,
+         },
+         {
+            Component: AuthMiddleware,
+            children: authRoutes,
+         },
+         ...publicRoutes,
+         {
+            path: "*",
+            Component: NotFound,
+         }
       ],
    },
 ]);

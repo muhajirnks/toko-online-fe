@@ -31,7 +31,7 @@ const Pagination: React.FC<Props> = ({
 
    return (
       <Box className="flex items-center justify-between mt-4 px-2">
-         <Typography variant="body1" className="text-text-primary">
+         <Typography variant="body1" className="text-foreground-primary">
             {Math.min((page - 1) * limit + 1, total)} -{" "}
             {Math.min(limit * page, total)} of {total}
          </Typography>
@@ -44,7 +44,7 @@ const Pagination: React.FC<Props> = ({
                   size="small"
                   sx={{
                      minWidth: 64,
-                     color: "var(--color-text-secondary)", // warna teks
+                     color: "var(--color-foreground-secondary)", // warna teks
                      backgroundColor: "var(--color-background-paper-dark)", // warna latar belakang
                      border: "1px solid var(--color-background-paper-light)",
                      borderRadius: "8px",
@@ -71,7 +71,7 @@ const Pagination: React.FC<Props> = ({
                      PaperProps: {
                         sx: {
                            backgroundColor: "var(--color-background-paper)", // warna background dropdown
-                           color: "var(--color-text-secondary)", // warna teks menu
+                           color: "var(--color-foreground-secondary)", // warna teks menu
                            borderRadius: "8px",
                            mt: 1,
                            boxShadow: "0 0 10px rgba(0,0,0,0.5)",
@@ -108,7 +108,7 @@ const Pagination: React.FC<Props> = ({
                         <Button
                            {...item}
                            className={`bg-background-paper-dark hover:bg-background-paper border border-background-paper-light min-w-0 w-9 h-9 grid place-items-center ${
-                              selected ? "text-primary" : "text-text-secondary"
+                              selected ? "text-primary" : "text-foreground-secondary"
                            }`}
                            type="button"
                            style={{
@@ -138,13 +138,13 @@ const Pagination: React.FC<Props> = ({
                            {type === "previous" ? (
                               <MdArrowBack
                                  className={`${
-                                    item.disabled ? "" : "text-text-secondary"
+                                    item.disabled ? "" : "text-foreground-secondary"
                                  } text-lg`}
                               />
                            ) : type === "next" ? (
                               <MdArrowForward
                                  className={`${
-                                    item.disabled ? "" : "text-text-secondary"
+                                    item.disabled ? "" : "text-foreground-secondary"
                                  } text-lg`}
                               />
                            ) : null}

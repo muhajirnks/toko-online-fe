@@ -8,7 +8,7 @@ const BuyerLayout = () => {
       <Box className="flex flex-col min-h-screen">
          <Header />
          
-         <Box component="main" className="flex-grow">
+         <Box component="main" className="grow">
             <Outlet />
          </Box>
 

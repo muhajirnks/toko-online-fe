@@ -3,8 +3,7 @@ import { Card, CardContent, CardMedia, Typography, Button, Box, IconButton, Tool
 import { useCartStore } from "@/store/useCartStore";
 import { Link } from "react-router-dom";
 import { MdAddShoppingCart, MdFavoriteBorder, MdVisibility } from "react-icons/md";
-
-import { formatRupiah } from "@/utils/numberUtils";
+import { formatCurrency } from "@/utils/stringUtils";
 
 interface ProductCardProps {
    product: Product;
@@ -137,7 +136,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                   {product.description}
                </Typography>
                <Typography variant="h6" color="primary.main" fontWeight="bold">
-                  {formatRupiah(product.price)}
+                  {formatCurrency(product.price)}
                </Typography>
             </CardContent>
          </Link>

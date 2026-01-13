@@ -36,7 +36,7 @@ function Input({
                ] ?? {}),
             },
             "& .MuiInputBase-root:hover fieldset": {
-               border: "0.6px solid var(--color-text-secondary)",
+               border: "0.6px solid var(--color-foreground-secondary)",
                ...((props.sx as Record<string, any>)?.[
                   "& .MuiInputBase-root:hover fieldset"
                ] ?? {}),

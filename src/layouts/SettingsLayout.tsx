@@ -37,8 +37,8 @@ const SettingsLayout = () => {
       <Box className="flex min-h-[calc(80dvh)] items-stretch gap-4 p-10">
          <Box>
             <Box className="flex items-center gap-2 mb-5">
-               <MdSettings className="text-2xl text-text-primary" />
-               <Typography variant="h5" className="text-text-primary">
+               <MdSettings className="text-2xl text-foreground-primary" />
+               <Typography variant="h5" className="text-foreground-primary">
                   Settings
                </Typography>
             </Box>

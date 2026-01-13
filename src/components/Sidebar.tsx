@@ -73,7 +73,7 @@ const Sidebar: React.FC<Props> = ({ isCollapsed, setIsCollapsed }) => {
                   borderRadius: '0',
                   borderRight: "1px solid var(--color-background-paper-light)",
                   background: themeMode == 'dark' ? "var(--color-background)" : "var(--color-background-paper)",
-                  color: "var(--color-foreground)",
+                  color: "var(--color-foreground-primary)",
                   paddingBlock: {
                      xs: "40px",
                   },
@@ -96,7 +96,7 @@ const Sidebar: React.FC<Props> = ({ isCollapsed, setIsCollapsed }) => {
 
                      <Typography
                         variant="h6"
-                        className="text-text-primary text-base"
+                        className="text-foreground-primary text-base"
                      >
                         {import.meta.env.VITE_APP_NAME}
                      </Typography>
@@ -151,7 +151,7 @@ const Sidebar: React.FC<Props> = ({ isCollapsed, setIsCollapsed }) => {
                                        className={`text-lg ${
                                           isActive
                                              ? "text-primary"
-                                             : "text-text-secondary"
+                                             : "text-foreground-secondary"
                                        }`}
                                     />
                                  </ListItemIcon>
@@ -164,7 +164,7 @@ const Sidebar: React.FC<Props> = ({ isCollapsed, setIsCollapsed }) => {
                                              fontSize: "14px",
                                              color: isActive
                                                 ? "var(--color-primary)"
-                                                : "var(--color-text-secondary)",
+                                                : "var(--color-foreground-secondary)",
                                              fontWeight: "medium",
                                           },
                                        }}

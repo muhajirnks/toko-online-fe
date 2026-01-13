@@ -49,18 +49,6 @@ export const getUpdateProfileSchema = memoize(() =>
    Yup.object({
       name: Yup.string().required("Name is required"),
       email: Yup.string().required("Email is required"),
-      avatar: Yup.mixed<File | string>()
-         .nullable()
-         .test("fileType", "File format not supported", (value: any) => {
-            // jika string (misal URL lama), lewati validasi
-            if (!value || typeof value === "string") return true;
-            return (value.type as string).startsWith("image/");
-         })
-         .test("fileSize", "Maximum file size is 2MB", (value: any) => {
-            // jika string (misal URL lama), lewati validasi
-            if (!value || typeof value === "string") return true;
-            return value.size <= 2 * 1024 * 1024;
-         }),
    })
 );
 

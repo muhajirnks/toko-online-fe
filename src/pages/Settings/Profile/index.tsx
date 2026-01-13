@@ -73,7 +73,7 @@ const Profile = () => {
    return (
       <Box className="px-3">
          <Box className="mb-5">
-            <Typography variant="h5" className="text-text-primary">
+            <Typography variant="h5" className="text-foreground-primary">
                Profile Information
             </Typography>
             <Typography variant="body1">

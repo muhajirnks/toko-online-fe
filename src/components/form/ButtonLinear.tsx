@@ -1,4 +1,10 @@
-import { Box, Button, type ButtonProps } from "@mui/material";
+import {
+   Box,
+   Button,
+   type ButtonProps,
+   type ButtonTypeMap,
+   type ExtendButtonBase,
+} from "@mui/material";
 
 const ButtonLinear = (props: ButtonProps) => {
    return (
@@ -16,9 +22,11 @@ const ButtonLinear = (props: ButtonProps) => {
                className={`bg-linear-to-r from-primary to-secondary w-full h-full group-hover:rotate-180 group-hover:brightness-75 transition-all duration-700`}
             ></Box>
          </Box>
-         <span className="relative z-10">{props.children}</span>
+         <Box className="relative z-10 flex items-center gap-2">
+            {props.children}
+         </Box>
       </Button>
    );
-};
+}; 
 
-export default ButtonLinear;
+export default ButtonLinear as ExtendButtonBase<ButtonTypeMap>;

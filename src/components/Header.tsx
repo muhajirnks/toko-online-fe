@@ -121,7 +121,7 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
                   <MdChevronRight
                      className={`${
                         avatarMenuAnchor ? "rotate-270" : "rotate-90"
-                     } transition-transform text-text-secondary ml-1`}
+                     } transition-transform text-foreground-secondary ml-1`}
                   />
                </Button>
             ) : (
@@ -158,10 +158,10 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
          >
             {/* User Info Header */}
             <Box className="px-5 pt-0.5 pb-2.5 border-b border-[#1E1E1E0D]">
-               <Typography variant="h6" className="text-text-primary">
+               <Typography variant="h6" className="text-foreground-primary">
                   {user?.name}
                </Typography>
-               <Typography variant="body1" className="text-text-secondary">
+               <Typography variant="body1" className="text-foreground-secondary">
                   {user?.email}
                </Typography>
             </Box>
@@ -178,7 +178,7 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
                   }}
                   className="py-3 px-5 hover:bg-background-paper-light transition-colors"
                >
-                  <ListItemIcon className="text-xl text-text-secondary min-w-[35px]">
+                  <ListItemIcon className="text-xl text-foreground-secondary min-w-[35px]">
                      {item.icon}
                   </ListItemIcon>
                   <ListItemText 

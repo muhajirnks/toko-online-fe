@@ -47,7 +47,7 @@ const AuthLayout: React.FC<Props> = ({
                               className="w-20"
                            />
                         </Link>
-                        <Typography variant="h3" className="text-text-primary">
+                        <Typography variant="h3" className="text-foreground-primary">
                            {import.meta.env.VITE_APP_NAME}
                         </Typography>
                      </Box>
@@ -59,7 +59,7 @@ const AuthLayout: React.FC<Props> = ({
                         <Box className="p-8 pb-6">
                            {icon}
                            <Typography
-                              className={`text-[30px] font-semibold mb-2 text-text-primary ${
+                              className={`text-[30px] font-semibold mb-2 text-foreground-primary ${
                                  icon ? "text-center" : "text-start"
                               }`}
                            >

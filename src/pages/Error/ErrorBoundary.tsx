@@ -1,4 +1,10 @@
+import { useRouteError } from "react-router-dom";
+
 export default function ErrorBoundary() {
+  let error = useRouteError();
+
+  console.error("Error boundary: ", error);
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">

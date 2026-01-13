@@ -18,7 +18,7 @@ import {
 import { useCartStore } from "@/store/useCartStore";
 import { useState } from "react";
 import { MdAddShoppingCart, MdStorefront, MdInventory, MdInfoOutline } from "react-icons/md";
-import { formatRupiah } from "@/utils/numberUtils";
+import { formatCurrency } from "@/utils/stringUtils";
 
 const ProductDetail = () => {
    const { id } = useParams();
@@ -93,7 +93,7 @@ const ProductDetail = () => {
                   
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
                      <Typography variant="h4" color="primary" fontWeight="bold">
-                        {formatRupiah(product.price)}
+                        {formatCurrency(product.price)}
                      </Typography>
                      {product.stock > 0 ? (
                         <Chip label="Stok Tersedia" color="success" size="small" variant="filled" />

@@ -74,7 +74,7 @@ const DateInput = ({
                ] ?? {}),
             },
             "& .MuiPickersInputBase-root:hover fieldset": {
-               border: "0.6px solid var(--color-text-secondary)",
+               border: "0.6px solid var(--color-foreground-secondary)",
                ...((sx as Record<string, any>)?.[
                   "& .MuiPickersInputBase-root:hover fieldset"
                ] ?? {}),

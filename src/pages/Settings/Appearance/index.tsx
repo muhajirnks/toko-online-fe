@@ -36,7 +36,7 @@ const Appearance = () => {
    return (
       <Box className="px-3">
          <Box className="mb-5">
-            <Typography variant="h5" className="text-text-primary">
+            <Typography variant="h5" className="text-foreground-primary">
                Appearance
             </Typography>
             <Typography variant="body1">Update your appearance</Typography>

@@ -18,7 +18,7 @@ const theme = createTheme({
          fontSize: 14,
          fontFamily:
             '"Work Sans", sans-serif',
-         color: 'var(--color-text-secondary)',
+         color: 'var(--color-foreground-secondary)',
       },
       h1: {
          fontSize: 50,

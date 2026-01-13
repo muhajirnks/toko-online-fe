@@ -22,7 +22,7 @@ const SelectInput = <T,>(props: SelectProps<T>) => {
                ...((props.sx as Record<string, any>)?.["& fieldset"] ?? {}),
             },
             "&:hover fieldset": {
-               borderColor: "var(--color-text-secondary) !important",
+               borderColor: "var(--color-foreground-secondary) !important",
                ...((props.sx as Record<string, any>)?.["&:hover fieldset"] ??
                   {}),
             },
