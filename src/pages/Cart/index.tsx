@@ -5,7 +5,7 @@ import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
 import { createOrder } from "@/services/order.service";
 import { useSnackbarStore } from "@/store/useSnackbarStore";
 import { useState } from "react";
-import { formatRupiah } from "@/utils/numberUtils";
+import { formatCurrency } from "@/utils/stringUtils";
 
 const CartPage = () => {
    const { items, removeItem, updateQuantity, getTotalPrice, clearCart } = useCartStore();
@@ -82,7 +82,7 @@ const CartPage = () => {
                               secondary={
                                  <Box sx={{ mt: 1 }}>
                                     <Typography variant="body2" color="text.primary">
-                                       {formatRupiah(item.product.price)}
+                                       {formatCurrency(item.product.price)}
                                     </Typography>
                                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, gap: 1 }}>
                                        <IconButton size="small" onClick={() => updateQuantity(item.product._id, item.quantity - 1)}>
@@ -113,7 +113,7 @@ const CartPage = () => {
                      <Divider sx={{ my: 2 }} />
                      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
                         <Typography variant="h6">Total Price</Typography>
-                        <Typography variant="h6" color="primary">{formatRupiah(getTotalPrice())}</Typography>
+                        <Typography variant="h6" color="primary">{formatCurrency(getTotalPrice())}</Typography>
                      </Box>
                      <Button
                         fullWidth
