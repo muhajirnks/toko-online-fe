@@ -4,6 +4,7 @@ import { useCartStore } from "@/store/useCartStore";
 import { Link } from "react-router-dom";
 import { MdAddShoppingCart, MdFavoriteBorder, MdVisibility } from "react-icons/md";
 import { formatCurrency } from "@/utils/stringUtils";
+import { useUserStore } from "@/store/useUserStore";
 
 interface ProductCardProps {
    product: Product;
@@ -11,6 +12,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
    const addItem = useCartStore((state) => state.addItem);
+   const user = useUserStore(s => s.user)
 
    return (
       <Card 
@@ -140,7 +142,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                </Typography>
             </CardContent>
          </Link>
-         <Box sx={{ p: 2, pt: 0 }}>
+         {user?.role == 'user' && <Box sx={{ p: 2, pt: 0 }}>
             <Button
                fullWidth
                variant="contained"
@@ -157,7 +159,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             >
                {product.stock > 0 ? "Beli Sekarang" : "Stok Habis"}
             </Button>
-         </Box>
+         </Box>}
       </Card>
    );
 };

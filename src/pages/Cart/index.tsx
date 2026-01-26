@@ -74,6 +74,7 @@ const CartPage = () => {
                               />
                            </ListItemAvatar>
                            <ListItemText
+                              secondaryTypographyProps={{ component: 'div' }}
                               primary={
                                  <Typography variant="h6" component={Link} to={`/products/${item.product._id}`} sx={{ textDecoration: 'none', color: 'inherit' }}>
                                     {item.product.name}

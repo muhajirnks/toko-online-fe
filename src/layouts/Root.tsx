@@ -7,8 +7,8 @@ import {
    ThemeProvider,
 } from "@mui/material";
 import { Outlet, ScrollRestoration } from "react-router-dom";
-import lightTheme from "@/configs/muiLight.ts";
-import darkTheme from "@/configs/muiDark.ts";
+import lightTheme from "@/configs/mui/muiLight";
+import darkTheme from "@/configs/mui/muiDark";
 import SilentAuthMiddleware from "@/middleware/SilentAuthMiddleware.tsx";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";

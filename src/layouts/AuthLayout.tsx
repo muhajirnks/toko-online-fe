@@ -47,7 +47,10 @@ const AuthLayout: React.FC<Props> = ({
                               className="w-20"
                            />
                         </Link>
-                        <Typography variant="h3" className="text-foreground-primary">
+                        <Typography
+                           variant="h3"
+                           className="text-foreground-primary"
+                        >
                            {import.meta.env.VITE_APP_NAME}
                         </Typography>
                      </Box>
@@ -81,15 +84,6 @@ const AuthLayout: React.FC<Props> = ({
                </Box>
             </Slide>
          </Box>
-
-         {/* Footer */}
-         <Fade in={true} timeout={1500}>
-            <Box className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20">
-               <Typography className="text-[16px] text-center">
-                  Copyright © 2025 | All Rights Reserved.
-               </Typography>
-            </Box>
-         </Fade>
 
          {/* Additional decorative elements */}
          <Box className="absolute top-0 right-0 w-96 h-96 bg-linear-to-br from-gray-300/10 to-transparent rounded-full blur-3xl" />

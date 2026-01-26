@@ -22,11 +22,11 @@ const menu = [
       label: "Password",
       link: "/settings/password",
    },
-   {
-      icon: MdOutlineColorLens,
-      label: "Appearance",
-      link: "/settings/appearance",
-   },
+   // {
+   //    icon: MdOutlineColorLens,
+   //    label: "Appearance",
+   //    link: "/settings/appearance",
+   // },
 ];
 
 const SettingsLayout = () => {

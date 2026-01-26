@@ -1,6 +1,6 @@
 "use client";
 
-import { createTheme } from "@mui/material/styles";
+import { createTheme, alpha } from "@mui/material/styles";
 
 // Augment the palette to include custom colors
 declare module "@mui/material/styles" {
@@ -16,44 +16,43 @@ const theme = createTheme({
    typography: {
       allVariants: {
          fontSize: 14,
-         fontFamily:
-            '"Work Sans", sans-serif',
-         color: 'var(--color-foreground-secondary)',
+         fontFamily: '"Poppins", sans-serif',
+         color: "var(--color-foreground-primary)",
       },
       h1: {
          fontSize: 50,
          lineHeight: 1.5,
-         fontFamily: '"Work Sans", sans-serif',
+         fontFamily: '"Poppins", sans-serif',
          fontWeight: 700,
       },
       h2: {
          fontSize: 30,
          lineHeight: 1.5,
-         fontFamily: '"Work Sans", sans-serif',
+         fontFamily: '"Poppins", sans-serif',
          fontWeight: 700,
       },
       h3: {
          fontSize: 25,
          lineHeight: 1.5,
-         fontFamily: '"Work Sans", sans-serif',
+         fontFamily: '"Poppins", sans-serif',
          fontWeight: 600,
       },
       h4: {
          fontSize: 22,
          lineHeight: 1.5,
-         fontFamily: '"Work Sans", sans-serif',
+         fontFamily: '"Poppins", sans-serif',
          fontWeight: 600,
       },
       h5: {
          fontSize: 20,
          lineHeight: 1.5,
-         fontFamily: '"Work Sans", sans-serif',
+         fontFamily: '"Poppins", sans-serif',
          fontWeight: 500,
       },
       h6: {
          fontSize: 18,
          lineHeight: 1.5,
-         fontFamily: '"Work Sans", sans-serif',
+         fontFamily: '"Poppins", sans-serif',
          fontWeight: 500,
       },
       body1: {
@@ -67,15 +66,15 @@ const theme = createTheme({
       caption: {
          fontSize: 12,
          lineHeight: 1.5,
-         fontFamily: '"Work Sans", sans-serif',
+         fontFamily: '"Poppins", sans-serif',
       },
-      fontFamily: '"Work Sans", sans-serif',
+      fontFamily: '"Poppins", sans-serif',
    },
    palette: {
       primary: {
-         light: "#5d8ce3",
-         main: "#5584DC",
-         dark: "#4977cc",
+         light: "#2c649c",
+         main: "#255A8F",
+         dark: "#1d4c7a",
          contrastText: "#fff",
       },
       secondary: {
@@ -89,8 +88,8 @@ const theme = createTheme({
          paper: "#FFFFFF",
       },
       text: {
-         primary: "#2B2E48",
-         secondary: "#7D7D7D",
+         primary: "#000000",
+         secondary: "#00000080",
       },
    },
    components: {
@@ -101,6 +100,8 @@ const theme = createTheme({
                textTransform: "none",
                fontWeight: 600,
                boxShadow: "none",
+               lineHeight: 1.5,
+               padding: "10px 20px",
                "&:hover": {
                   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                },
@@ -110,16 +111,45 @@ const theme = createTheme({
       MuiCard: {
          styleOverrides: {
             root: {
-               borderRadius: 12,
-               boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08)",
+               borderRadius: 10,
+               boxShadow: "0 5px 20px 0 rgba(0, 0, 0, 0.05)",
             },
+         },
+      },
+      MuiCardContent: {
+         styleOverrides: {
+            root: {
+               padding: 30,
+            },
+         },
+      },
+      MuiChip: {
+         styleOverrides: {
+            root: ({ ownerState, theme }) => ({
+               ...(ownerState.color === "success" && {
+                  backgroundColor: "#ECFDF5",
+                  color: "#059669",
+               }),
+               ...(ownerState.color === "error" && {
+                  backgroundColor: "#FEF2F2",
+                  color: "#DC2626",
+               }),
+               ...(ownerState.color === "warning" && {
+                  backgroundColor: "#FFFBEB",
+                  color: "#D97706",
+               }),
+               ...(ownerState.color === "primary" && {
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  color: theme.palette.primary.main,
+               }),
+            }),
          },
       },
       MuiPaper: {
          styleOverrides: {
             root: {
-               borderRadius: 12,
-               backgroundImage: 'unset',
+               borderRadius: 10,
+               backgroundImage: "unset",
             },
          },
       },

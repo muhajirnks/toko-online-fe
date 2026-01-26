@@ -29,7 +29,9 @@ export const login = (body: LoginRequest) => {
 };
 
 export const logout = () => {
-   return myFetch<MessageResponse>("/api/v1/auth/logout");
+   return myFetch<MessageResponse>("/api/v1/auth/logout", {
+      method: 'POST'
+   });
 };
 
 export const refresh = () => {

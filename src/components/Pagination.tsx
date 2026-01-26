@@ -44,7 +44,7 @@ const Pagination: React.FC<Props> = ({
                   size="small"
                   sx={{
                      minWidth: 64,
-                     color: "var(--color-foreground-secondary)", // warna teks
+                     color: "var(--color-foreground-primary)", // warna teks
                      backgroundColor: "var(--color-background-paper-dark)", // warna latar belakang
                      border: "1px solid var(--color-background-paper-light)",
                      borderRadius: "8px",
@@ -102,12 +102,12 @@ const Pagination: React.FC<Props> = ({
                   let children = null;
 
                   if (type === "start-ellipsis" || type === "end-ellipsis") {
-                     children = "…";
+                     children = <Box className="w-9 h-9 grid place-items-center">...</Box>;
                   } else if (type === "page") {
                      children = (
                         <Button
                            {...item}
-                           className={`bg-background-paper-dark hover:bg-background-paper border border-background-paper-light min-w-0 w-9 h-9 grid place-items-center ${
+                           className={`bg-background-paper-dark hover:bg-background-paper border border-background-paper-light min-w-0 p-0 w-9 h-9 grid place-items-center ${
                               selected ? "text-primary" : "text-foreground-secondary"
                            }`}
                            type="button"
@@ -127,7 +127,7 @@ const Pagination: React.FC<Props> = ({
                               item.disabled
                                  ? ""
                                  : "bg-background-paper-dark hover:bg-background-paper border border-background-paper-light"
-                           } min-w-0 w-9 h-9 grid place-items-center`}
+                           } min-w-0 p-0 w-9 h-9 grid place-items-center`}
                            type="button"
                            onClick={() =>
                               onChangePage(

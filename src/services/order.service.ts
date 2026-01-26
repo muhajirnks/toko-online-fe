@@ -1,50 +1,38 @@
 import useFetch from "@/hooks/useFetch";
 import myFetch from "@/lib/fetch/myFetch";
+import type { MessageResponse, Pagination } from "@/types/api/api.type";
 import type {
-   DataResponse,
-   MessageResponse,
-   Pagination,
-   PaginationQs,
-} from "@/types/api/api.type";
-import type {
-   Order,
    CreateOrderRequest,
+   ListOrderRequest,
+   Order,
    UpdateOrderStatusRequest,
 } from "@/types/api/order.type";
 
-export const useListOrders = (qs?: PaginationQs) => {
-   return useFetch<Pagination<Order>>(`/api/v1/orders`, {
+export const useListOrders = (qs?: ListOrderRequest) => {
+   return useFetch<Pagination<Order>>("/api/v1/orders", {
       qs,
    });
 };
 
-export const useGetOrder = (id: string) => {
-   return useFetch<DataResponse<Order>>(`/api/v1/orders/${id}`);
-};
-
-export const getOrder = (id: string) => {
-   return myFetch<DataResponse<Order>>(`/api/v1/orders/${id}`);
-};
-
 export const createOrder = (body: CreateOrderRequest) => {
-   return myFetch<DataResponse<Order>>("/api/v1/orders", {
-      method: "POST",
+   return myFetch<Pagination<Order>>("/api/v1/orders", {
       body,
    });
 };
 
-export const updateOrder = (
-   id: string,
-   body: UpdateOrderStatusRequest
-) => {
-   return myFetch<DataResponse<Order>>(`/api/v1/orders/${id}/status`, {
+export const listOrders = (qs?: ListOrderRequest) => {
+   return myFetch<Pagination<Order>>("/api/v1/orders", {
+      qs,
+   });
+};
+
+export const getOrderById = (id: string) => {
+   return myFetch<{ data: Order }>(`/api/v1/orders/${id}`);
+};
+
+export const updateOrderStatus = (id: string, body: UpdateOrderStatusRequest) => {
+   return myFetch<MessageResponse>(`/api/v1/orders/${id}`, {
       method: "PUT",
       body,
-   });
-};
-
-export const deleteOrder = (id: string) => {
-   return myFetch<MessageResponse>(`/api/v1/orders/${id}`, {
-      method: "DELETE",
    });
 };

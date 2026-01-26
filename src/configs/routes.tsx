@@ -2,6 +2,7 @@ import Root from "@/layouts/Root";
 import AuthMiddleware from "@/middleware/AuthMiddleware";
 import GuestMiddleware from "@/middleware/GuestMiddleware";
 import RoleMiddleware from "@/middleware/RoleMiddleware";
+import StoreMiddleware from "@/middleware/StoreMiddleware";
 import ErrorBoundary from "@/pages/Error/ErrorBoundary";
 import NotFound from "@/pages/Error/NotFound";
 import { createBrowserRouter, type RouteObject } from "react-router-dom";
@@ -11,6 +12,12 @@ const guestRoutes: RouteObject[] = [
       path: "/login",
       lazy: async () => ({
          Component: (await import("@/pages/Auth/Login")).default,
+      }),
+   },
+   {
+      path: "/register",
+      lazy: async () => ({
+         Component: (await import("@/pages/Auth/Register")).default,
       }),
    },
    {
@@ -34,40 +41,43 @@ const authRoutes: RouteObject[] = [
       }),
       children: [
          {
-            element: <RoleMiddleware allowedRoles={["seller", "admin"]} />,
+            element: <RoleMiddleware allowedRoles={["user"]} />,
             children: [
                {
-                  path: "/seller/products",
-                  lazy: async () => ({
-                     Component: (await import("@/pages/Seller/Products"))
-                        .default,
-                  }),
+                  element: <StoreMiddleware />,
+                  children: [
+                     {
+                        path: "/seller/dashboard",
+                        lazy: async () => ({
+                           Component: (await import("@/pages/Seller/Dashboard"))
+                              .default,
+                        }),
+                     },
+                     {
+                        path: "/seller/products",
+                        lazy: async () => ({
+                           Component: (await import("@/pages/Seller/Products"))
+                              .default,
+                        }),
+                     },
+                     {
+                        path: "/seller/orders",
+                        lazy: async () => ({
+                           Component: (await import("@/pages/Seller/Orders"))
+                              .default,
+                        }),
+                     },
+                  ],
                },
             ],
          },
          {
-            lazy: async () => ({
-               Component: (await import("@/layouts/SettingsLayout")).default,
-            }),
+            element: <RoleMiddleware allowedRoles={["admin"]} />,
             children: [
                {
-                  path: "/settings/profile",
+                  path: "/admin/dashboard",
                   lazy: async () => ({
-                     Component: (await import("@/pages/Settings/Profile"))
-                        .default,
-                  }),
-               },
-               {
-                  path: "/settings/password",
-                  lazy: async () => ({
-                     Component: (await import("@/pages/Settings/Password"))
-                        .default,
-                  }),
-               },
-               {
-                  path: "/settings/appearance",
-                  lazy: async () => ({
-                     Component: (await import("@/pages/Settings/Appearance"))
+                     Component: (await import("@/pages/Admin/Dashboard"))
                         .default,
                   }),
                },
@@ -76,20 +86,56 @@ const authRoutes: RouteObject[] = [
       ],
    },
    {
+      element: <RoleMiddleware allowedRoles={["user"]} />,
+      children: [
+         {
+            lazy: async () => ({
+               Component: (await import("@/layouts/BuyerLayout")).default,
+            }),
+            children: [
+               {
+                  path: "/cart",
+                  lazy: async () => ({
+                     Component: (await import("@/pages/Cart")).default,
+                  }),
+               },
+               {
+                  path: "/orders",
+                  lazy: async () => ({
+                     Component: (await import("@/pages/Orders")).default,
+                  }),
+               },
+            ],
+         },
+         {
+            path: "/seller/store/create",
+            lazy: async () => ({
+               Component: (await import("@/pages/Seller/Store/Create")).default,
+            }),
+         },
+      ],
+   },
+   {
       lazy: async () => ({
-         Component: (await import("@/layouts/BuyerLayout")).default,
+         Component: (await import("@/layouts/SettingsLayout")).default,
       }),
       children: [
          {
-            path: "/cart",
+            path: "/settings/profile",
             lazy: async () => ({
-               Component: (await import("@/pages/Cart")).default,
+               Component: (await import("@/pages/Settings/Profile")).default,
             }),
          },
          {
-            path: "/orders",
+            path: "/settings/password",
             lazy: async () => ({
-               Component: (await import("@/pages/Orders")).default,
+               Component: (await import("@/pages/Settings/Password")).default,
+            }),
+         },
+         {
+            path: "/settings/appearance",
+            lazy: async () => ({
+               Component: (await import("@/pages/Settings/Appearance")).default,
             }),
          },
       ],
@@ -142,7 +188,7 @@ export const router = createBrowserRouter([
          {
             path: "*",
             Component: NotFound,
-         }
+         },
       ],
    },
 ]);

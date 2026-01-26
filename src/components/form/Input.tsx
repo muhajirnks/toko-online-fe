@@ -1,41 +1,41 @@
-import {
-   TextField,
-   type TextFieldProps,
-   type TextFieldVariants,
-} from "@mui/material";
+import { TextField, type TextFieldProps } from "@mui/material";
 
-function Input({
-   ...props
-}: {
-   variant?: TextFieldVariants;
-} & Omit<TextFieldProps, "variant">) {
+function Input({ ...props }: TextFieldProps) {
    return (
       <TextField
          {...props}
          sx={{
             "& .MuiInputBase-root": {
                borderRadius: props.size == "small" ? "8px" : "12px",
-               backgroundColor: "var(--color-background-paper-dark)",
+               backgroundColor: "var(--color-background-paper)",
                ...((props.sx as Record<string, any>)?.[
-                  "& .MuiInputBase-root:hover fieldset"
+                  "& .MuiInputBase-root"
                ] ?? {}),
             },
             "& input": {
                borderRadius: props.size == "small" ? "8px" : "12px",
-               ...((props.sx as Record<string, any>)?.[
-                  "& input"
-               ] ?? {}),
+               ...((props.sx as Record<string, any>)?.["& input"] ?? {}),
             },
             "& fieldset": {
                border: "0.6px solid var(--color-background-paper-light)",
                transitionProperty: "border-color",
                transitionDuration: "100ms",
                borderRadius: props.size == "small" ? "8px" : "12px",
+               ...((props.sx as Record<string, any>)?.["& fieldset"] ?? {}),
+            },
+            "& .MuiInputBase-root.Mui-disabled": {
+               backgroundColor: "var(--color-background-paper-light)",
                ...((props.sx as Record<string, any>)?.[
-                  "& fieldset"
+                  "& .MuiInputBase-Mui-disabled"
                ] ?? {}),
             },
-            "& .MuiInputBase-root:hover fieldset": {
+            "& .MuiInputBase-root.Mui-disabled fieldset": {
+               border: "0.6px solid var(--color-background-paper-light)",
+               ...((props.sx as Record<string, any>)?.[
+                  "& .MuiInputBase-Mui-disabled fieldset"
+               ] ?? {}),
+            },
+            "& .MuiInputBase-root:hover:not(.Mui-disabled) fieldset": {
                border: "0.6px solid var(--color-foreground-secondary)",
                ...((props.sx as Record<string, any>)?.[
                   "& .MuiInputBase-root:hover fieldset"
@@ -49,9 +49,9 @@ function Input({
             },
             "& input:-webkit-autofill": {
                WebkitBoxShadow:
-                  "1000px 1000px 1000px 1000px var(--color-background-paper-light) inset",
-               WebkitTextFillColor: "#fff",
-               caretColor: "#fff",
+                  "1000px 1000px 1000px 1000px var(--color-background-paper) inset",
+               WebkitTextFillColor: "var(--color-foreground-primary)",
+               caretColor: "var(--color-foreground-primary)",
                ...((props.sx as Record<string, any>)?.[
                   "& input:-webkit-autofill"
                ] ?? {}),

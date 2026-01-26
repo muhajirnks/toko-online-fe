@@ -13,7 +13,14 @@ import {
    Typography,
 } from "@mui/material";
 import { useState } from "react";
-import { MdChevronRight, MdLogout, MdSettings, MdShoppingCart, MdListAlt, MdStorefront } from "react-icons/md";
+import {
+   MdChevronRight,
+   MdLogout,
+   MdSettings,
+   MdShoppingCart,
+   MdListAlt,
+   MdStorefront,
+} from "react-icons/md";
 import { useNavigate, Link } from "react-router-dom";
 import { LuPanelLeft } from "react-icons/lu";
 import { useThemeStore } from "@/store/useThemeStore";
@@ -23,17 +30,18 @@ import { Badge } from "@mui/material";
 
 interface Props {
    toggleSidebar?: () => void;
+   isSeller?: boolean;
 }
 
-const Header: React.FC<Props> = ({ toggleSidebar }) => {
+const Header: React.FC<Props> = ({ toggleSidebar, isSeller = false }) => {
    const [avatarMenuAnchor, setAvatarMenuAnchor] = useState<null | HTMLElement>(
-      null
+      null,
    );
 
    const { user, setUser, loading, setLoading } = useUserStore();
-   const totalItems = useCartStore(s => s.getTotalItems());
+   const totalItems = useCartStore((s) => s.getTotalItems());
    const navigate = useNavigate();
-   const themeMode = useThemeStore(s => s.theme)
+   const themeMode = useThemeStore((s) => s.theme);
 
    const handleClose = () => {
       setAvatarMenuAnchor(null);
@@ -41,7 +49,7 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
 
    const handleLogoout = async () => {
       setLoading(true);
-      
+
       const { data } = await logout();
       if (data) {
          setUser(null);
@@ -51,25 +59,37 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
       setLoading(false);
    };
 
-   const avatarMenuItems = [
+   const adminMenuItems = [
+      { path: "/settings/profile", label: "Settings", icon: <MdSettings /> },
+      {
+         path: "/admin/dashboard",
+         label: "Admin Panel",
+         icon: <MdStorefront />,
+      },
+   ];
+
+   const userMenuItems = [
       { path: "/orders", label: "My Orders", icon: <MdListAlt /> },
       { path: "/settings/profile", label: "Settings", icon: <MdSettings /> },
-      ...(user?.role === "seller" || user?.role === "admin" 
-         ? [{ path: "/seller/products", label: "Seller Panel", icon: <MdStorefront /> }] 
-         : []),
+      {
+         path: user?.store ? "/seller/dashboard" : "/seller/store/create",
+         label: user?.store ? "Seller Panel" : "Create Store",
+         icon: <MdStorefront />,
+      },
    ];
+   const avatarMenuItems = user?.role == 'admin' ? adminMenuItems : userMenuItems;
 
    return (
       <Box
          component="header"
-         className={`sticky left-0 top-0 z-1199 flex justify-between items-center border-b border-background-paper-light py-5 pl-5 pr-10 ${themeMode == 'dark' ? "bg-background" : "bg-background-paper"}`}
+         className={`sticky left-0 top-0 z-1199 flex justify-between items-center border-b border-background-paper-light py-5 pl-5 pr-10 ${themeMode == "dark" ? "bg-background" : "bg-background-paper"}`}
          id="header"
          sx={{
             height: "75px",
          }}
       >
          <Box className="flex gap-3 items-center">
-            {toggleSidebar ? (
+            {isSeller ? (
                <IconButton onClick={toggleSidebar}>
                   <LuPanelLeft className="text-base" />
                </IconButton>
@@ -86,11 +106,13 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
          </Box>
 
          <Box className="flex gap-[15px] items-center">
-            <IconButton component={Link} to="/cart" color="inherit">
-               <Badge badgeContent={totalItems} color="primary">
-                  <MdShoppingCart />
-               </Badge>
-            </IconButton>
+            {!isSeller && user?.role == "user" && (
+               <IconButton component={Link} to="/cart" color="inherit">
+                  <Badge badgeContent={totalItems} color="primary">
+                     <MdShoppingCart />
+                  </Badge>
+               </IconButton>
+            )}
 
             {user ? (
                <Button
@@ -111,7 +133,10 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
                      }}
                   />
                   <Box className="flex flex-col items-start text-left normal-case">
-                     <Typography variant="body2" className="font-semibold line-clamp-1">
+                     <Typography
+                        variant="body2"
+                        className="font-semibold line-clamp-1"
+                     >
                         {user.name}
                      </Typography>
                      <Typography variant="caption" color="text.secondary">
@@ -125,16 +150,28 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
                   />
                </Button>
             ) : (
-               <Button
-                  component={Link}
-                  to="/login"
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  className="rounded-full px-6"
-               >
-                  Login
-               </Button>
+               <Box className="flex gap-2">
+                  <Button
+                     component={Link}
+                     to="/login"
+                     variant="outlined"
+                     color="primary"
+                     size="small"
+                     className="rounded-full px-6"
+                  >
+                     Login
+                  </Button>
+                  <Button
+                     component={Link}
+                     to="/register"
+                     variant="contained"
+                     color="primary"
+                     size="small"
+                     className="rounded-full px-6"
+                  >
+                     Register
+                  </Button>
+               </Box>
             )}
          </Box>
 
@@ -161,7 +198,10 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
                <Typography variant="h6" className="text-foreground-primary">
                   {user?.name}
                </Typography>
-               <Typography variant="body1" className="text-foreground-secondary">
+               <Typography
+                  variant="body1"
+                  className="text-foreground-secondary"
+               >
                   {user?.email}
                </Typography>
             </Box>
@@ -181,9 +221,12 @@ const Header: React.FC<Props> = ({ toggleSidebar }) => {
                   <ListItemIcon className="text-xl text-foreground-secondary min-w-[35px]">
                      {item.icon}
                   </ListItemIcon>
-                  <ListItemText 
-                     primary={item.label} 
-                     primaryTypographyProps={{ variant: 'body2', className: 'font-medium' }}
+                  <ListItemText
+                     primary={item.label}
+                     primaryTypographyProps={{
+                        variant: "body2",
+                        className: "font-medium",
+                     }}
                   />
                </MenuItem>
             ))}

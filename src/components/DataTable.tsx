@@ -17,22 +17,30 @@ import {
    Typography,
 } from "@mui/material";
 import { useMemo } from "react";
-import { MdInsertDriveFile, MdOutlineInsertDriveFile } from "react-icons/md";
+import {
+   MdCheck,
+   MdClose,
+   MdInsertDriveFile,
+   MdOutlineInsertDriveFile,
+} from "react-icons/md";
 
 interface Props<T extends Record<string, any>> {
    selected?: any[];
    rows: T[];
    config: TableConfig;
-   sortBy: string;
-   sort: "asc" | "desc";
-   loading: boolean;
+   page?: number;
+   limit?: number;
+   sortBy?: string;
+   sort?: "asc" | "desc";
+   loading?: boolean;
    onCheckAll?: (checked: boolean) => void;
-   onCheck?: (id: any) => void;
+   onCheck?: (id: any, row: T) => void;
    onChangeSort?: (sortKey: string) => void;
    renderAction?: (row: T, idx: number) => React.ReactNode;
 }
 
 export interface TableConfig {
+   showNumber?: boolean;
    uniqueField?: string;
    columns: Column[];
 }
@@ -62,7 +70,8 @@ interface ColumnType {
       | "currency"
       | "url"
       | "time"
-      | "avatar";
+      | "avatar"
+      | "boolean";
 }
 
 export const createTableConfig = (config: TableConfig) => {
@@ -75,20 +84,25 @@ const DataTable = <T extends Record<string, any>>({
    config,
    sortBy,
    sort,
-   loading,
+   page,
+   limit,
+   loading = false,
    onCheckAll,
    onCheck,
    onChangeSort,
    renderAction,
 }: Props<T>) => {
-   const { columns, uniqueField } = config;
+   const { columns, uniqueField, showNumber = false } = config;
    const selectedSet = useMemo(() => new Set(selected), [selected]);
+
+   const mostLeft = selected ? "selected" : showNumber ? "show_number" : "data";
+   const mostRight = renderAction ? "action" : "data";
 
    return (
       <TableContainer className="h-full">
          <Table stickyHeader>
             <TableHead>
-               <TableRow className="bg-background-paper">
+               <TableRow className="bg-background-paper-dark">
                   {selected && (
                      <TableCell
                         padding="checkbox"
@@ -102,26 +116,34 @@ const DataTable = <T extends Record<string, any>>({
                               rows.length > 0 &&
                               rows.every((r, idx) =>
                                  selectedSet.has(
-                                    uniqueField ? r[uniqueField] : idx
-                                 )
+                                    uniqueField ? r[uniqueField] : idx,
+                                 ),
                               )
                            }
                            indeterminate={
                               rows.some((r, idx) =>
                                  selectedSet.has(
-                                    uniqueField ? r[uniqueField] : idx
-                                 )
+                                    uniqueField ? r[uniqueField] : idx,
+                                 ),
                               ) &&
                               !rows.every((r, idx) =>
                                  selectedSet.has(
-                                    uniqueField ? r[uniqueField] : idx
-                                 )
+                                    uniqueField ? r[uniqueField] : idx,
+                                 ),
                               )
                            }
                            onChange={(_, checked) =>
                               onCheckAll && onCheckAll(checked)
                            }
                         />
+                     </TableCell>
+                  )}
+
+                  {showNumber && (
+                     <TableCell
+                        className={`${mostLeft == "show_number" ? "pl-7" : ""} font-bold bg-transparent border-0 text-sm w-1 text-center`}
+                     >
+                        No
                      </TableCell>
                   )}
                   {columns.map((col, colIdx) => {
@@ -133,9 +155,10 @@ const DataTable = <T extends Record<string, any>>({
                         <TableCell
                            key={col.key}
                            className={`py-3 whitespace-nowrap font-bold bg-transparent border-0 text-sm ${
-                              !selected && colIdx == 0 ? "pl-7" : ""
+                              mostLeft == "data" && colIdx == 0 ? "pl-7" : ""
                            } ${
-                              !renderAction && colIdx == columns.length - 1
+                              mostRight == "data" &&
+                              colIdx == columns.length - 1
                                  ? "pr-7"
                                  : ""
                            }`}
@@ -163,7 +186,7 @@ const DataTable = <T extends Record<string, any>>({
                      );
                   })}
                   {renderAction && !loading && (
-                     <TableCell className="font-bold text-center bg-transparent border-0 pr-6 text-sm">
+                     <TableCell className="font-bold text-center bg-transparent border-0 pr-6 text-sm w-1">
                         Action
                      </TableCell>
                   )}
@@ -175,14 +198,14 @@ const DataTable = <T extends Record<string, any>>({
                      <TableRow
                         key={idx + "loading"}
                         sx={{
+                           "& td, & th": {
+                              borderBottom: "1px solid rgba(0,0,0,0.1)",
+                           },
                            "&:last-child td, &:last-child th": { border: 0 },
                         }}
                      >
                         {selected && (
-                           <TableCell
-                              padding="checkbox"
-                              className="pl-6 border-0"
-                           >
+                           <TableCell padding="checkbox" className="pl-6">
                               <Checkbox
                                  disabled
                                  color="primary"
@@ -191,14 +214,24 @@ const DataTable = <T extends Record<string, any>>({
                               />
                            </TableCell>
                         )}
+                        {showNumber && (
+                           <TableCell
+                              className={`${mostLeft == "show_number" ? "pl-7" : ""} w-1 py-4 text-sm`}
+                           >
+                              <Skeleton />
+                           </TableCell>
+                        )}
                         {columns.map((col, colIdx) => (
                            <Cell
                               key={idx + col.key}
                               row={{}}
                               col={col}
                               loading={true}
-                              pl={!selected && colIdx == 0}
-                              pr={!renderAction && colIdx == columns.length - 1}
+                              pl={mostLeft == "data" && colIdx == 0}
+                              pr={
+                                 mostRight == "data" &&
+                                 colIdx == columns.length - 1
+                              }
                            />
                         ))}
                      </TableRow>
@@ -216,35 +249,38 @@ const DataTable = <T extends Record<string, any>>({
                   rows.map((row, idx) => (
                      <TableRow
                         key={uniqueField ? row[uniqueField] : idx}
-                        className={`${
-                           idx % 2 == 0
-                              ? "bg-background-paper-dark"
-                              : "bg-background-paper"
-                        }`}
+                        className="bg-background-paper"
                         sx={{
+                           "& td, & th": {
+                              borderBottom: "1px solid rgba(0,0,0,0.1)",
+                           },
                            "&:last-child td, &:last-child th": {
                               border: 0,
                            },
                         }}
                      >
                         {selected && (
-                           <TableCell
-                              padding="checkbox"
-                              className="pl-6 border-0"
-                           >
+                           <TableCell padding="checkbox" className="pl-6">
                               <Checkbox
                                  color="primary"
                                  size="small"
                                  onChange={() =>
                                     onCheck &&
                                     onCheck(
-                                       uniqueField ? row[uniqueField] : idx
+                                       (uniqueField ? row[uniqueField] : idx), row,
                                     )
                                  }
                                  checked={selectedSet.has(
-                                    uniqueField ? row[uniqueField] : idx
+                                    uniqueField ? row[uniqueField] : idx,
                                  )}
                               />
+                           </TableCell>
+                        )}
+                        {showNumber && (
+                           <TableCell
+                              className={`${mostLeft == "show_number" ? "pl-7" : ""} w-1 py-4 text-sm text-center`}
+                           >
+                              {page && limit ? (idx + 1) + ((page - 1) * limit) : (idx + 1)}
                            </TableCell>
                         )}
                         {columns.map((col, colIdx) => (
@@ -261,7 +297,7 @@ const DataTable = <T extends Record<string, any>>({
                         ))}
                         {renderAction && (
                            <TableCell
-                              className="py-4.5 whitespace-nowrap max-w-76 pr-6 text-sm border-0"
+                              className="py-3 whitespace-nowrap max-w-76 pr-6 text-sm w-1"
                               align={"center"}
                            >
                               {renderAction(row, idx)}
@@ -292,7 +328,7 @@ const Cell = ({ row, col, loading, pl, pr }: CellProps) => {
    const cell = useMemo(() => {
       if (loading)
          return (
-            <TableCell className="py-4.5 whitespace-nowrap max-w-76 border-0">
+            <TableCell className="py-4 whitespace-nowrap max-w-76">
                <Skeleton variant="text" width={150} />
             </TableCell>
          );
@@ -347,20 +383,27 @@ const Cell = ({ row, col, loading, pl, pr }: CellProps) => {
                {label}
             </Avatar>
          );
-      } else if (col.type == 'number') {
+      } else if (col.type == "number") {
          value = formatNumber(rawValue);
          label = value as string;
-      } else if (col.type == 'currency') {
+      } else if (col.type == "currency") {
          value = formatCurrency(rawValue);
          label = value as string;
+      } else if (col.type == "boolean") {
+         value = rawValue ? (
+            <MdCheck className="text-lg text-green-700" />
+         ) : (
+            <MdClose className="text-lg text-red-700" />
+         );
+         label = "";
       } else {
          value = label || "-";
       }
 
       return (
          <TableCell
-            className={`whitespace-nowrap max-w-76 border-0 text-sm ${
-               col.type == "image" ? "py-1" : "py-4.5"
+            className={`whitespace-nowrap max-w-76 text-sm ${
+               col.type == "image" ? "py-1" : "py-4"
             } ${pl ? "pl-7" : ""} ${pr ? "pr-7" : ""}`}
             align={col.type == "number" ? "right" : "left"}
          >

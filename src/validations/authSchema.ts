@@ -30,6 +30,19 @@ export const getResetPasswordSchema = memoize(() =>
    })
 );
 
+export const getRegisterSchema = memoize(() =>
+   Yup.object({
+      name: Yup.string().required("Name is required"),
+      email: Yup.string().required("Email is required").email("Email is not valid"),
+      password: Yup.string()
+         .required("Password is required")
+         .min(8, "Password must be at least 8 characters"),
+      confirmPassword: Yup.string()
+         .required("Confirm password is required")
+         .oneOf([Yup.ref("password")], "Passwords must match"),
+   })
+);
+
 export const getUpdatePasswordSchema = memoize(() =>
    Yup.object({
       oldPassword: Yup.string()
@@ -58,6 +71,7 @@ export const getUpdateProfileSchema = memoize(() =>
 // Types
 // ========================================
 export type LoginFormData = Yup.InferType<ReturnType<typeof getLoginSchema>>;
+export type RegisterFormData = Yup.InferType<ReturnType<typeof getRegisterSchema>>;
 export type ForgotPasswordFormData = Yup.InferType<ReturnType<typeof getForgotPasswordSchema>>;
 export type ResetPasswordFormData = Yup.InferType<ReturnType<typeof getResetPasswordSchema>>;
 export type UpdatePasswordFormData = Yup.InferType<ReturnType<typeof getUpdatePasswordSchema>>;

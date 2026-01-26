@@ -1,9 +1,18 @@
 export interface User {
-    _id: number;
+    _id: string;
     name: string;
     email: string;
-    role: "admin" | "seller" | "buyer";
+    role: "admin" | "user";
+    store?: Store;
 }
+
+export interface Store {
+    _id: string;
+    name: string;
+    description?: string;
+    avatarUrl?: string;
+}
+
 export interface Token {
     type: 'Bearer';
     accessToken: string;

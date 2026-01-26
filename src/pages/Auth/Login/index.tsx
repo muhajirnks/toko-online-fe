@@ -73,7 +73,7 @@ const Login = () => {
                <Form>
                   <div className="grid gap-5">
                      <div className="grid gap-[13px]">
-                        <FormLabel htmlFor="email">Username</FormLabel>
+                        <FormLabel htmlFor="email">Email</FormLabel>
 
                         <Field name="email">
                            {({
@@ -166,6 +166,13 @@ const Login = () => {
                      >
                         Log in
                      </Button>
+
+                     <div className="mt-4 text-center text-sm">
+                        Don&apos;t have an account?{" "}
+                        <Link to="/register" className="underline font-bold">
+                           Sign up
+                        </Link>
+                     </div>
                   </div>
                </Form>
             )}

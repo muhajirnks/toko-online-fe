@@ -1,5 +1,5 @@
 import type { PaginationQs } from "./api.type";
-import type { User } from "./auth.type";
+import type { Store } from "./auth.type";
 import type { Category } from "./category.type";
 
 export interface Product {
@@ -10,14 +10,14 @@ export interface Product {
    stock: number;
    imageUrl: string;
    category: Category;
-   seller: User;
+   store: Store;
    createdAt: string;
    updatedAt: string;
 }
 
 export interface ListProductRequest extends PaginationQs {
    categoryId?: string;
-   sellerId?: string;
+   storeId?: string;
 }
 
 export interface CreateProductRequest {

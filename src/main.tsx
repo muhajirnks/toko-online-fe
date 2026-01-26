@@ -3,7 +3,7 @@ import "@/assets/css/index.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./configs/routes.tsx";
 import { GlobalStyles, StyledEngineProvider, ThemeProvider } from "@mui/material";
-import theme from "./configs/muiLight.ts";
+import theme from "./configs/mui/muiLight.ts";
 import SilentAuthMiddleware from "./middleware/SilentAuthMiddleware.tsx";
 
 createRoot(document.getElementById("root")!).render(

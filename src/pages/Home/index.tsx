@@ -36,7 +36,7 @@ const Home = () => {
             }}
          >
             <Container maxWidth="xl">
-               <Grid container alignItems="center">
+               <Grid container alignItems="center" spacing={4}>
                   <Grid size={{ xs: 12, md: 6 }}>
                      <Typography
                         variant="h2"
@@ -135,8 +135,8 @@ const Home = () => {
          </Container>
 
          {/* Categories Section */}
-         <Box sx={{ bgcolor: "grey.50", py: 8 }}>
-            <Container maxWidth="lg">
+         <Box sx={{ py: 8 }}>
+            <Container maxWidth="xl">
                <Box
                   sx={{
                      display: "flex",
@@ -162,22 +162,7 @@ const Home = () => {
                         <Paper
                            component={Link}
                            to={`/products?categoryId=${cat._id}`}
-                           sx={{
-                              p: 3,
-                              display: 'block',
-                              height: '100%',
-                              textAlign: "center",
-                              cursor: "pointer",
-                              textDecoration: "none",
-                              color: "inherit",
-                              borderRadius: 4,
-                              transition: "all 0.3s",
-                              "&:hover": {
-                                 transform: "translateY(-5px)",
-                                 boxShadow: 4,
-                                 color: "primary.main",
-                              },
-                           }}
+                           className="hover:-translate-y-0.5 p-3 h-full grid place-items-center transition-all min-h-16"
                         >
                            <Typography variant="subtitle1" fontWeight="bold">
                               {cat.name}

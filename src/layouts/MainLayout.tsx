@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Sidebar, {
    DRAWER_WIDTH_COLLAPSED,
    DRAWER_WIDTH_EXPANDED,
-} from "@/components/Sidebar";
+} from "@/components/sidebar/Sidebar";
 import { Box } from "@mui/material";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
@@ -31,7 +31,7 @@ const MainLayout = () => {
                }px)`,
             }}
          >
-            <Header toggleSidebar={toggleSidebar} />
+            <Header toggleSidebar={toggleSidebar} isSeller />
 
             <Box className="min-h-[80%]">
                <Outlet />
