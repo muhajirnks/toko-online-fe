@@ -1,4 +1,4 @@
-import type { MenuItem } from "@/configs/menu/menu";
+import type { MenuItem } from "@/configs/menu";
 import { Link, useLocation } from "react-router-dom";
 import {
    Menu,

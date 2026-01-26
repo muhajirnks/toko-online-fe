@@ -1,4 +1,4 @@
-import type { MenuItem } from "@/configs/menu/menu";
+import type { MenuItem } from "@/configs/menu";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { IoChevronDown } from "react-icons/io5";

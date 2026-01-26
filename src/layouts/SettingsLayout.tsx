@@ -8,7 +8,7 @@ import {
    ListItemText,
    Typography,
 } from "@mui/material";
-import { MdLockOutline, MdOutlineColorLens, MdPersonOutline, MdSettings } from "react-icons/md";
+import { MdLockOutline, MdPersonOutline, MdSettings } from "react-icons/md";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 const menu = [
