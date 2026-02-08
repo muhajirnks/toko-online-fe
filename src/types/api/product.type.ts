@@ -16,7 +16,7 @@ export interface Product {
 }
 
 export interface ListProductRequest extends PaginationQs {
-   categoryId?: string;
+   category?: string;
    storeId?: string;
 }
 

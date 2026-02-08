@@ -1,5 +1,3 @@
-import { decamelize } from "humps";
-
 export const prepareFormData = (data: Record<string, any>) => {
    const formData = new FormData();
 
@@ -17,7 +15,7 @@ export const prepareFormData = (data: Record<string, any>) => {
          !(value instanceof Date)
       ) {
          Object.entries(value).forEach(([k, v]) => {
-            appendValue(`${key}[${decamelize(k)}]`, v);
+            appendValue(`${key}[${k}]`, v);
          });
       } else {
          switch (value) {
@@ -35,7 +33,7 @@ export const prepareFormData = (data: Record<string, any>) => {
    };
 
    Object.entries(data).forEach(([key, value]) => {
-      appendValue(decamelize(key), value);
+      appendValue(key, value);
    });
 
    return formData;

@@ -14,7 +14,6 @@ import {
    TableContainer,
    TableHead,
    TableRow,
-   Paper,
    Chip,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -147,54 +146,58 @@ const SellerDashboard = () => {
             ))}
          </Grid>
 
-         <Typography variant="h6" fontWeight="bold" gutterBottom>
+         <Typography variant="h6" fontWeight="bold" className="mb-3">
             Recent Orders
          </Typography>
-         <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
-            <Table>
-               <TableHead sx={{ bgcolor: "grey.50" }}>
-                  <TableRow>
-                     <TableCell className="font-bold">Order ID</TableCell>
-                     <TableCell className="font-bold">Customer</TableCell>
-                     <TableCell className="font-bold">Date</TableCell>
-                     <TableCell className="font-bold">Total</TableCell>
-                     <TableCell className="font-bold">Status</TableCell>
-                  </TableRow>
-               </TableHead>
-               <TableBody>
-                  {stats?.recentOrders.length === 0 ? (
-                     <TableRow>
-                        <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
-                           No recent orders found
-                        </TableCell>
-                     </TableRow>
-                  ) : (
-                     stats?.recentOrders.map((order) => (
-                        <TableRow key={order._id}>
-                           <TableCell sx={{ fontWeight: "medium" }}>
-                              #{order._id.substring(order._id.length - 8)}
-                           </TableCell>
-                           <TableCell>{order.customerName}</TableCell>
-                           <TableCell>
-                              {dayjs(order.createdAt).format("DD MMM YYYY")}
-                           </TableCell>
-                           <TableCell>
-                              {formatCurrency(order.totalAmount)}
-                           </TableCell>
-                           <TableCell>
-                              <Chip
-                                 label={order.status.toUpperCase()}
-                                 color={getStatusColor(order.status) as any}
-                                 size="small"
-                                 sx={{ fontWeight: "bold" }}
-                              />
-                           </TableCell>
+         <Card>
+            <CardContent className="p-0">
+               <TableContainer sx={{ borderRadius: 2 }}>
+                  <Table>
+                     <TableHead sx={{ bgcolor: "grey.50" }}>
+                        <TableRow>
+                           <TableCell className="font-bold">Order ID</TableCell>
+                           <TableCell className="font-bold">Customer</TableCell>
+                           <TableCell className="font-bold">Date</TableCell>
+                           <TableCell className="font-bold">Total</TableCell>
+                           <TableCell className="font-bold">Status</TableCell>
                         </TableRow>
-                     ))
-                  )}
-               </TableBody>
-            </Table>
-         </TableContainer>
+                     </TableHead>
+                     <TableBody>
+                        {stats?.recentOrders.length === 0 ? (
+                           <TableRow>
+                              <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
+                                 No recent orders found
+                              </TableCell>
+                           </TableRow>
+                        ) : (
+                           stats?.recentOrders.map((order) => (
+                              <TableRow key={order._id}>
+                                 <TableCell sx={{ fontWeight: "medium" }}>
+                                    #{order._id.substring(order._id.length - 8)}
+                                 </TableCell>
+                                 <TableCell>{order.customerName}</TableCell>
+                                 <TableCell>
+                                    {dayjs(order.createdAt).format("DD MMM YYYY")}
+                                 </TableCell>
+                                 <TableCell>
+                                    {formatCurrency(order.totalAmount)}
+                                 </TableCell>
+                                 <TableCell>
+                                    <Chip
+                                       label={order.status.toUpperCase()}
+                                       color={getStatusColor(order.status) as any}
+                                       size="small"
+                                       sx={{ fontWeight: "bold" }}
+                                    />
+                                 </TableCell>
+                              </TableRow>
+                           ))
+                        )}
+                     </TableBody>
+                  </Table>
+               </TableContainer>
+            </CardContent>
+         </Card>
       </Container>
    );
 };

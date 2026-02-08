@@ -30,7 +30,7 @@ const Pagination: React.FC<Props> = ({
    });
 
    return (
-      <Box className="flex items-center justify-between mt-4 px-2">
+      <Box className="flex items-center gap-3 justify-between mt-4 px-2">
          <Typography variant="body1" className="text-foreground-primary">
             {Math.min((page - 1) * limit + 1, total)} -{" "}
             {Math.min(limit * page, total)} of {total}

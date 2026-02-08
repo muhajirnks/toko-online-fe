@@ -14,8 +14,21 @@ export const useListOrders = (qs?: ListOrderRequest) => {
    });
 };
 
+export const useListSellerOrders = (qs?: ListOrderRequest) => {
+   return useFetch<Pagination<Order>>("/api/v1/orders/seller", {
+      qs,
+   });
+};
+
+export const useListAdminOrders = (qs?: ListOrderRequest) => {
+   return useFetch<Pagination<Order>>("/api/v1/orders/admin", {
+      qs,
+   });
+};
+
 export const createOrder = (body: CreateOrderRequest) => {
    return myFetch<Pagination<Order>>("/api/v1/orders", {
+      method: "POST",
       body,
    });
 };

@@ -1,14 +1,29 @@
 import DataTable, { createTableConfig } from "@/components/DataTable";
-import { useListProducts, createProduct, updateProduct, deleteProduct } from "@/services/product.service";
+import {
+   useListSellerProducts,
+   createProduct,
+   updateProduct,
+   deleteProduct,
+} from "@/services/product.service";
 import type { CreateProductRequest, Product } from "@/types/api/product.type";
-import { Typography, Box, Button, IconButton, Menu, MenuItem, InputAdornment } from "@mui/material";
-import { useState, useMemo } from "react";
+import {
+   Typography,
+   Box,
+   Button,
+   IconButton,
+   Menu,
+   MenuItem,
+   InputAdornment,
+   Card,
+   CardContent,
+   debounce,
+} from "@mui/material";
+import { useMemo, useState } from "react";
 import PaginationComponent from "@/components/Pagination";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import ProductForm from "./components/ProductForm";
 import ModalDelete from "./components/ModalDelete";
 import { useSnackbarStore } from "@/store/useSnackbarStore";
-import { useUserStore } from "@/store/useUserStore";
 import type { HandleSubmit } from "@/types/formik.type";
 import type { ProductFormData } from "@/validations/productSchema";
 import { formatCurrency } from "@/utils/stringUtils";
@@ -16,28 +31,51 @@ import { BsSearch } from "react-icons/bs";
 import { MdAdd, MdMoreVert } from "react-icons/md";
 import Input from "@/components/form/Input";
 
+const config = createTableConfig({
+   uniqueField: "_id",
+   columns: [
+      { key: "name", label: "Product Name", type: "string" },
+      {
+         key: "price",
+         label: "Price",
+         type: "custom",
+         renderValue: (val) => formatCurrency(val as number),
+      },
+      { key: "stock", label: "Stock", type: "number" },
+      { key: "category.name", label: "Category", type: "string" },
+   ],
+});
+
 const SellerProductsPage = () => {
-   const [page, setPage] = useState(1);
+   const [qs, setQs] = useState({
+      page: 1,
+      limit: 10,
+      search: "",
+   });
+   const [searchQuery, setSearchQuery] = useState("");
    const [open, setOpen] = useState(false);
    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
    const [isSubmitting, setIsSubmitting] = useState(false);
-   const [search, setSearch] = useState("");
    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
    const [menuProduct, setMenuProduct] = useState<Product | null>(null);
    const [openDelete, setOpenDelete] = useState(false);
    const [isDeleting, setIsDeleting] = useState(false);
 
-   const setSnackbar = useSnackbarStore(s => s.setSnackbar);
-   const user = useUserStore(s => s.user);
+   const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
 
-   const params = useMemo(() => ({
-      page,
-      limit: 10,
-      storeId: user?.store?._id.toString(),
-      search: search || undefined,
-   }), [page, user?.store?._id, search]);
+   const { data, loading, fetchData } = useListSellerProducts(qs);
 
-   const { data, loading, fetchData } = useListProducts(params);
+   const debouncedSearch = useMemo(
+      () =>
+         debounce((search: string) => {
+            setQs({
+               ...qs,
+               page: 1,
+               search,
+            });
+         }, 800),
+      [qs],
+   );
 
    const handleOpen = (product?: Product) => {
       setSelectedProduct(product || null);
@@ -50,7 +88,10 @@ const SellerProductsPage = () => {
       setSelectedProduct(null);
    };
 
-   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>, product: Product) => {
+   const handleMenuOpen = (
+      event: React.MouseEvent<HTMLElement>,
+      product: Product,
+   ) => {
       setAnchorEl(event.currentTarget);
       setMenuProduct(product);
    };
@@ -73,48 +114,54 @@ const SellerProductsPage = () => {
          if (error) {
             setSnackbar({ type: "failure", message: error.message });
          } else {
-            setSnackbar({ type: "success", message: "Product deleted successfully!" });
+            setSnackbar({
+               type: "success",
+               message: "Product deleted successfully!",
+            });
             setOpenDelete(false);
             setMenuProduct(null);
             fetchData();
          }
       } catch (err: any) {
-         setSnackbar({ type: "failure", message: err.message || "An error occurred" });
+         setSnackbar({
+            type: "failure",
+            message: err.message || "An error occurred",
+         });
       } finally {
          setIsDeleting(false);
       }
    };
 
-   const handleSubmit: HandleSubmit<ProductFormData> = async (values) => {
+   const handleSubmit: HandleSubmit<ProductFormData> = async (
+      values,
+      { setErrors },
+   ) => {
       setIsSubmitting(true);
-      try {
-         const { error } = selectedProduct
-            ? await updateProduct(selectedProduct._id, values)
-            : await createProduct(values as CreateProductRequest);
+      const { error, data } = selectedProduct
+         ? await updateProduct(selectedProduct._id, values)
+         : await createProduct(values as CreateProductRequest);
 
-         if (error) {
-            setSnackbar({ type: "failure", message: error.message });
+      if (error) {
+         if (error.errors) {
+            setErrors(error.errors);
          } else {
-            setSnackbar({ type: "success", message: `Product ${selectedProduct ? 'updated' : 'created'} successfully!` });
-            handleClose();
-            fetchData();
+            setSnackbar({
+               type: "failure",
+               message: error.message || "Error occured while saving data",
+            });
          }
-      } catch (err: any) {
-         setSnackbar({ type: "failure", message: err.message || "An error occurred" });
-      } finally {
-         setIsSubmitting(false);
       }
-   };
 
-   const config = createTableConfig({
-      uniqueField: "_id",
-      columns: [
-         { key: "name", label: "Product Name", type: "string" },
-         { key: "price", label: "Price", type: "custom", renderValue: (val) => formatCurrency(val as number) },
-         { key: "stock", label: "Stock", type: "number" },
-         { key: "category.name", label: "Category", type: "string" },
-      ],
-   });
+      if (data) {
+         setSnackbar({
+            type: "success",
+            message: `Product ${selectedProduct ? "updated" : "created"} successfully!`,
+         });
+         handleClose();
+         fetchData();
+      }
+      setIsSubmitting(false);
+   };
 
    return (
       <Box className="flex flex-col py-12 px-[50px] pb-4">
@@ -128,7 +175,7 @@ const SellerProductsPage = () => {
                   <FaEdit /> Edit
                </Box>
             </MenuItem>
-            <MenuItem onClick={handleDeleteClick} sx={{ color: 'error.main' }}>
+            <MenuItem onClick={handleDeleteClick} sx={{ color: "error.main" }}>
                <Box className="flex items-center gap-2">
                   <FaTrash /> Delete
                </Box>
@@ -142,61 +189,71 @@ const SellerProductsPage = () => {
             loading={isDeleting}
          />
 
-         <Box className="bg-background-paper rounded-[10px] overflow-hidden p-7.5 shadow-[0_5px_20px_0_rgba(0,0,0,0.05)]">
-            <Typography variant="h5" className="text-foreground-primary mb-5">
-               Product List
-            </Typography>
-            <Box className="flex justify-end items-center gap-4 mb-5">
-               <Input
-                  placeholder="Search"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  size="small"
-                  className="grow basis-0"
-                  slotProps={{
-                     input: {
-                        startAdornment: (
-                           <InputAdornment position="start">
-                              <BsSearch className="text-[15px]" />
-                           </InputAdornment>
-                        ),
-                     },
-                  }}
-               />
-               <Button
-                  variant="contained"
-                  startIcon={<MdAdd className="text-xl" />}
-                  onClick={() => handleOpen()}
+         <Card>
+            <CardContent>
+               <Typography
+                  variant="h5"
+                  className="text-foreground-primary mb-5"
                >
-                  Add Product
-               </Button>
-            </Box>
+                  Product List
+               </Typography>
+               <Box className="flex justify-end items-center gap-4 mb-5">
+                  <Input
+                     placeholder="Search"
+                     value={searchQuery}
+                     onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        debouncedSearch(e.target.value);
+                     }}
+                     size="small"
+                     className="grow basis-0"
+                     slotProps={{
+                        input: {
+                           startAdornment: (
+                              <InputAdornment position="start">
+                                 <BsSearch className="text-[15px]" />
+                              </InputAdornment>
+                           ),
+                        },
+                     }}
+                  />
+                  <Button
+                     variant="contained"
+                     startIcon={<MdAdd className="text-xl" />}
+                     onClick={() => handleOpen()}
+                  >
+                     Add Product
+                  </Button>
+               </Box>
 
-            <DataTable
-               rows={data?.data || []}
-               config={config}
-               loading={loading}
-               sortBy="name"
-               sort="asc"
-               renderAction={(row) => (
-                  <IconButton onClick={(e) => handleMenuOpen(e, row as Product)}>
-                     <MdMoreVert />
-                  </IconButton>
-               )}
-            />
-
-            <Box className="mt-5">
-               <PaginationComponent
-                  page={page}
-                  lastPage={data?.meta.lastPage || 1}
-                  onChangePage={(p) => setPage(p)}
-                  limit={data?.meta.limit || 10}
-                  total={data?.meta.total || 0}
-                  onChangeRowsPerPage={() => {}}
-                  rowsPerPageOptions={[]}
+               <DataTable
+                  rows={data?.data || []}
+                  config={config}
+                  loading={loading}
+                  sortBy="name"
+                  sort="asc"
+                  renderAction={(row) => (
+                     <IconButton
+                        onClick={(e) => handleMenuOpen(e, row as Product)}
+                     >
+                        <MdMoreVert />
+                     </IconButton>
+                  )}
                />
-            </Box>
-         </Box>
+
+               <Box className="mt-5">
+                  <PaginationComponent
+                     page={qs.page}
+                     lastPage={data?.meta.lastPage || 1}
+                     onChangePage={(p) => setQs({ ...qs, page: p })}
+                     limit={data?.meta.limit || 10}
+                     total={data?.meta.total || 0}
+                     onChangeRowsPerPage={(limit) => setQs({ ...qs, limit })}
+                     rowsPerPageOptions={[10, 25, 50]}
+                  />
+               </Box>
+            </CardContent>
+         </Card>
 
          <ProductForm
             open={open}

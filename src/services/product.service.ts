@@ -19,6 +19,12 @@ export const useListProducts = (qs?: ListProductRequest) => {
    });
 };
 
+export const useListSellerProducts = (qs?: ListProductRequest) => {
+   return useFetch<Pagination<Product>>(`/api/v1/products/seller`, {
+      qs,
+   });
+};
+
 export const useGetProduct = (id: string) => {
    return useFetch<DataResponse<Product>>(`/api/v1/products/${id}`);
 };
@@ -29,7 +35,7 @@ export const getProduct = (id: string) => {
 
 export const createProduct = (body: CreateProductRequest) => {
    const data = prepareFormData(body);
-   return myFetch<DataResponse<Product>>("/api/v1/products", {
+   return myFetch<MessageResponse>("/api/v1/products", {
       method: "POST",
       body: data,
    });
@@ -37,7 +43,7 @@ export const createProduct = (body: CreateProductRequest) => {
 
 export const updateProduct = (id: string, body: UpdateProductRequest) => {
    const data = prepareFormData(body);
-   return myFetch<DataResponse<Product>>(`/api/v1/products/${id}`, {
+   return myFetch<MessageResponse>(`/api/v1/products/${id}`, {
       method: "PUT",
       body: data,
    });

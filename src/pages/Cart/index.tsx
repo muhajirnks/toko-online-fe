@@ -1,4 +1,19 @@
-import { Container, Typography, Box, Grid, Card, CardContent, IconButton, Button, Divider, List, ListItem, ListItemText, ListItemAvatar, Avatar } from "@mui/material";
+import {
+   Container,
+   Typography,
+   Box,
+   Grid,
+   Card,
+   CardContent,
+   IconButton,
+   Button,
+   Divider,
+   List,
+   ListItem,
+   ListItemText,
+   ListItemAvatar,
+   Avatar,
+} from "@mui/material";
 import { useCartStore } from "@/store/useCartStore";
 import { Link, useNavigate } from "react-router-dom";
 import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
@@ -8,7 +23,8 @@ import { useState } from "react";
 import { formatCurrency } from "@/utils/stringUtils";
 
 const CartPage = () => {
-   const { items, removeItem, updateQuantity, getTotalPrice, clearCart } = useCartStore();
+   const { items, removeItem, updateQuantity, getTotalPrice, clearCart } =
+      useCartStore();
    const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
    const navigate = useNavigate();
    const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,18 +36,25 @@ const CartPage = () => {
             productId: item.product._id,
             quantity: item.quantity,
          }));
+         console.log(orderItems);
 
          const { error } = await createOrder({ items: orderItems });
 
          if (error) {
             setSnackbar({ type: "failure", message: error.message });
          } else {
-            setSnackbar({ type: "success", message: "Order created successfully!" });
+            setSnackbar({
+               type: "success",
+               message: "Order created successfully!",
+            });
             clearCart();
             navigate("/orders");
          }
       } catch (err: any) {
-         setSnackbar({ type: "failure", message: err.message || "Failed to create order" });
+         setSnackbar({
+            type: "failure",
+            message: err.message || "Failed to create order",
+         });
       } finally {
          setIsSubmitting(false);
       }
@@ -39,8 +62,10 @@ const CartPage = () => {
 
    if (items.length === 0) {
       return (
-         <Container maxWidth="md" sx={{ py: 8, textAlign: 'center' }}>
-            <Typography variant="h5" gutterBottom>Your cart is empty</Typography>
+         <Container maxWidth="md" sx={{ py: 8, textAlign: "center" }}>
+            <Typography variant="h5" gutterBottom>
+               Your cart is empty
+            </Typography>
             <Button component={Link} to="/" variant="contained" sx={{ mt: 2 }}>
                Go Shopping
             </Button>
@@ -54,67 +79,140 @@ const CartPage = () => {
             Shopping Cart
          </Typography>
          <Grid container spacing={4}>
-            <Grid size={{xs: 12, md: 8}}>
-               <List sx={{ width: '100%', bgcolor: 'background.paper', borderRadius: 2, boxShadow: 1 }}>
-                  {items.map((item) => (
-                     <Box key={item.product._id}>
-                        <ListItem
-                           alignItems="flex-start"
-                           secondaryAction={
-                              <IconButton edge="end" aria-label="delete" onClick={() => removeItem(item.product._id)}>
-                                 <FaTrash color="error" className="text-lg" />
-                              </IconButton>
-                           }
-                        >
-                           <ListItemAvatar sx={{ mr: 2 }}>
-                              <Avatar
-                                 variant="rounded"
-                                 src={item.product.imageUrl}
-                                 sx={{ width: 80, height: 80 }}
-                              />
-                           </ListItemAvatar>
-                           <ListItemText
-                              secondaryTypographyProps={{ component: 'div' }}
-                              primary={
-                                 <Typography variant="h6" component={Link} to={`/products/${item.product._id}`} sx={{ textDecoration: 'none', color: 'inherit' }}>
-                                    {item.product.name}
-                                 </Typography>
-                              }
-                              secondary={
-                                 <Box sx={{ mt: 1 }}>
-                                    <Typography variant="body2" color="text.primary">
-                                       {formatCurrency(item.product.price)}
-                                    </Typography>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, gap: 1 }}>
-                                       <IconButton size="small" onClick={() => updateQuantity(item.product._id, item.quantity - 1)}>
-                                          <FaMinus size={14} />
-                                       </IconButton>
-                                       <Typography variant="body1">{item.quantity}</Typography>
-                                       <IconButton size="small" onClick={() => updateQuantity(item.product._id, item.quantity + 1)}>
-                                          <FaPlus size={14} />
-                                       </IconButton>
-                                    </Box>
-                                 </Box>
-                              }
-                           />
-                        </ListItem>
-                        <Divider variant="inset" component="li" />
-                     </Box>
-                  ))}
-               </List>
+            <Grid size={{ xs: 12, md: 8 }}>
+               <Card>
+                  <CardContent className="p-0">
+                     <List>
+                        {items.map((item, idx) => (
+                           <Box key={item.product._id}>
+                              <ListItem
+                                 alignItems="flex-start"
+                                 secondaryAction={
+                                    <IconButton
+                                       edge="end"
+                                       aria-label="delete"
+                                       onClick={() =>
+                                          removeItem(item.product._id)
+                                       }
+                                    >
+                                       <FaTrash
+                                          color="error"
+                                          className="text-lg"
+                                       />
+                                    </IconButton>
+                                 }
+                              >
+                                 <ListItemAvatar sx={{ mr: 2 }}>
+                                    <Avatar
+                                       variant="rounded"
+                                       src={item.product.imageUrl}
+                                       sx={{ width: 80, height: 80 }}
+                                    />
+                                 </ListItemAvatar>
+                                 <ListItemText
+                                    secondaryTypographyProps={{
+                                       component: "div",
+                                    }}
+                                    primary={
+                                       <Typography
+                                          variant="h6"
+                                          component={Link}
+                                          to={`/products/${item.product._id}`}
+                                          sx={{
+                                             textDecoration: "none",
+                                             color: "inherit",
+                                          }}
+                                       >
+                                          {item.product.name}
+                                       </Typography>
+                                    }
+                                    secondary={
+                                       <Box sx={{ mt: 1 }}>
+                                          <Typography
+                                             variant="body2"
+                                             color="text.primary"
+                                          >
+                                             {formatCurrency(
+                                                item.product.price,
+                                             )}
+                                          </Typography>
+                                          <Box
+                                             sx={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                mt: 1,
+                                                gap: 1,
+                                             }}
+                                          >
+                                             <IconButton
+                                                size="small"
+                                                onClick={() =>
+                                                   updateQuantity(
+                                                      item.product._id,
+                                                      item.quantity - 1,
+                                                   )
+                                                }
+                                             >
+                                                <FaMinus size={14} />
+                                             </IconButton>
+                                             <Typography variant="body1">
+                                                {item.quantity}
+                                             </Typography>
+                                             <IconButton
+                                                size="small"
+                                                onClick={() =>
+                                                   updateQuantity(
+                                                      item.product._id,
+                                                      item.quantity + 1,
+                                                   )
+                                                }
+                                             >
+                                                <FaPlus size={14} />
+                                             </IconButton>
+                                          </Box>
+                                       </Box>
+                                    }
+                                 />
+                              </ListItem>
+                              {idx !== items.length - 1 && (
+                                 <Divider variant="middle" component="li" />
+                              )}
+                           </Box>
+                        ))}
+                     </List>
+                  </CardContent>
+               </Card>
             </Grid>
-            <Grid size={{xs: 12, md: 4}}>
+            <Grid size={{ xs: 12, md: 4 }}>
                <Card sx={{ borderRadius: 2, boxShadow: 1 }}>
                   <CardContent>
-                     <Typography variant="h6" gutterBottom>Order Summary</Typography>
-                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+                     <Typography variant="h6" gutterBottom>
+                        Order Summary
+                     </Typography>
+                     <Box
+                        sx={{
+                           display: "flex",
+                           justifyContent: "space-between",
+                           mb: 2,
+                        }}
+                     >
                         <Typography variant="body1">Total Items</Typography>
-                        <Typography variant="body1">{items.reduce((acc, item) => acc + item.quantity, 0)}</Typography>
+                        <Typography variant="body1">
+                           {items.reduce((acc, item) => acc + item.quantity, 0)}
+                        </Typography>
                      </Box>
                      <Divider sx={{ my: 2 }} />
-                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 4 }}>
+                     <Box
+                        sx={{
+                           display: "flex",
+                           justifyContent: "space-between",
+                           mb: 4,
+                        }}
+                     >
                         <Typography variant="h6">Total Price</Typography>
-                        <Typography variant="h6" color="primary">{formatCurrency(getTotalPrice())}</Typography>
+                        <Typography variant="h6" color="primary">
+                           {formatCurrency(getTotalPrice())}
+                        </Typography>
                      </Box>
                      <Button
                         fullWidth

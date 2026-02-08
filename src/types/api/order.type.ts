@@ -34,6 +34,7 @@ export interface CreateOrderRequest {
 
 export interface ListOrderRequest extends PaginationQs {
    status?: OrderStatus;
+   search?: string;
    userId?: string;
    storeId?: string;
 }

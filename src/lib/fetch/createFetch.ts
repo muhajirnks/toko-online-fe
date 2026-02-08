@@ -138,7 +138,8 @@ const createFetch = (opts: CreateOptions = {}) => {
          let url = `${baseUrl}${endpoint}`;
 
          if (Object.keys(qs).length > 0) {
-            url += "?" + toQueryString(decamelizeKeys(qs));
+            const finaleQs = decamelize ? decamelizeKeys(qs) : qs;
+            url += "?" + toQueryString(finaleQs);
          }
 
          try {

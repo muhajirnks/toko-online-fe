@@ -6,8 +6,7 @@ const SelectInput = <T,>(props: SelectProps<T>) => {
          {...props}
          sx={{
             "&": {
-               borderRadius: "800px",
-               backgroundColor: "var(--color-background-paper-dark)",
+               // backgroundColor: "var(--color-background-paper-dark)",
             },
             ...((props.sx as Record<string, any>)?.["&"] ?? {}),
             "& input": {

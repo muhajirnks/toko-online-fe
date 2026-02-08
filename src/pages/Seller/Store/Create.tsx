@@ -22,7 +22,7 @@ import { getProfile } from "@/services/auth.service";
 const CreateStorePage = () => {
    const [isSubmitting, setIsSubmitting] = useState(false);
    const setSnackbar = useSnackbarStore((s) => s.setSnackbar);
-   const {user, setUser} = useUserStore();
+   const { user, setUser } = useUserStore();
    const navigate = useNavigate();
 
    const storeSchema = getStoreSchema();
@@ -33,48 +33,50 @@ const CreateStorePage = () => {
       avatar: null,
    };
 
-   const handleSubmit: HandleSubmit<StoreFormData> = async (values) => {
+   const handleSubmit: HandleSubmit<StoreFormData> = async (
+      values,
+      { setErrors },
+   ) => {
       setIsSubmitting(true);
-      try {
-         const { data, error } = await createStore({
-            name: values.name,
-            description: values.description || "",
-            avatar: values.avatar,
-         });
+      const { data, error } = await createStore({
+         name: values.name,
+         description: values.description || "",
+         avatar: values.avatar,
+      });
 
-         if (data) {
-            setSnackbar({
-               type: "success",
-               message: "Store created successfully!",
-            });
-
-            // Refresh user profile to get store info
-            const { data: profileData } = await getProfile();
-            if (profileData) {
-               setUser(profileData.data);
-            }
-
-            navigate("/seller/products");
-         }
-
-         if (error) {
-            setSnackbar({ type: "failure", message: error.message });
-         }
-      } catch (err: any) {
+      if (data) {
          setSnackbar({
-            type: "failure",
-            message: err.message || "Failed to create store",
+            type: "success",
+            message: "Store created successfully!",
          });
-      } finally {
-         setIsSubmitting(false);
+
+         // Refresh user profile to get store info
+         const { data: profileData } = await getProfile();
+         if (profileData) {
+            setUser(profileData.data);
+         }
+
+         navigate("/seller/products");
       }
+
+      if (error) {
+         if (error.errors) {
+            setErrors(error.errors);
+         } else {
+            setSnackbar({
+               type: "failure",
+               message: error.message || "Error occured while saving data",
+            });
+         }
+      }
+      setIsSubmitting(false);
    };
 
    useEffect(() => {
-      if(user?.store) {
-         navigate('/seller/products');
+      if (user?.store) {
+         navigate("/seller/products");
       }
-   }, [user])
+   }, [user]);
 
    return (
       <Container maxWidth="md" sx={{ py: 8 }}>
@@ -149,13 +151,9 @@ const CreateStorePage = () => {
                                           setFieldValue("avatar", file)
                                        }
                                        error={
-                                          meta.touched &&
-                                          Boolean(meta.error)
+                                          meta.touched && Boolean(meta.error)
                                        }
-                                       helperText={
-                                          meta.touched &&
-                                          meta.error
-                                       }
+                                       helperText={meta.touched && meta.error}
                                     />
                                  )}
                               </Field>

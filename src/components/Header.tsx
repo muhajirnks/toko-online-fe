@@ -77,12 +77,13 @@ const Header: React.FC<Props> = ({ toggleSidebar, isSeller = false }) => {
          icon: <MdStorefront />,
       },
    ];
-   const avatarMenuItems = user?.role == 'admin' ? adminMenuItems : userMenuItems;
+   const avatarMenuItems =
+      user?.role == "admin" ? adminMenuItems : userMenuItems;
 
    return (
       <Box
          component="header"
-         className={`sticky left-0 top-0 z-1199 flex justify-between items-center border-b border-background-paper-light py-5 pl-5 pr-10 ${themeMode == "dark" ? "bg-background" : "bg-background-paper"}`}
+         className={`sticky left-0 top-0 z-1199 flex justify-between items-center border-b border-background-paper-light py-5 max-sm:px-4 px-10 ${themeMode == "dark" ? "bg-background" : "bg-background-paper"}`}
          id="header"
          sx={{
             height: "75px",
