@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import Input from "@/components/form/Input";
 import SelectInput from "@/components/form/SelectInput";
-import FileInput from "@/components/form/FIleInput";
+import FileInput from "@/components/form/FileInput";
 import { useCategoryStore } from "@/store/useCategoryStore";
 import { useEffect } from "react";
 import type { Product } from "@/types/api/product.type";

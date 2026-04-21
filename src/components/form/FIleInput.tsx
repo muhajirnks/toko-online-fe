@@ -267,7 +267,7 @@ const FileInput = (props: Props) => {
             <FormHelperText
                className={`${
                   error ? "text-red-700" : "text-gray-500"
-               } text-[12px]/normal max-sm:text-[10px]/normal max-md:text-[11px]/normal`}
+               } text-xs/normal max-sm:text-[10px]/normal max-md:text-[11px]/normal`}
             >
                {helperText}
             </FormHelperText>

@@ -1,5 +1,5 @@
 import Input from "@/components/form/Input";
-import FileInput from "@/components/form/FIleInput";
+import FileInput from "@/components/form/FileInput";
 import { createStore } from "@/services/store.service";
 import { useUserStore } from "@/store/useUserStore";
 import { useSnackbarStore } from "@/store/useSnackbarStore";
